@@ -1,0 +1,279 @@
+@import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap');
+
+/* =========================================================
+   1. TOKENS (scoped to .admin-wrapper so the public site is untouched)
+   ========================================================= */
+.admin-wrapper {
+  --bg: #e6e8ec;
+  --shell: #f3f4f6;
+  --card: #ffffff;
+  --ink: #0f172a;
+  --on: #ffffff;
+  --mut: #64748b;
+  --line: #eceff3;
+  --soft: #f3f4f6;
+  --sh: 0 1px 2px rgba(15, 23, 42, 0.04), 0 8px 24px rgba(15, 23, 42, 0.05);
+}
+
+.admin-wrapper[data-theme='dark'] {
+  --bg: #070b14;
+  --shell: #0f1523;
+  --card: #182133;
+  --ink: #f8fafc;
+  --on: #0b1120;
+  --mut: #94a3b8;
+  --line: #26324a;
+  --soft: #202b42;
+  --sh: 0 1px 2px rgba(0, 0, 0, 0.3), 0 8px 24px rgba(0, 0, 0, 0.3);
+}
+
+.admin-wrapper {
+  --z: 0.8;                      /* change this: 0.8 = 80% browser zoom, 0.9 = 90% */
+  zoom: var(--z);
+  min-height: calc(100vh / var(--z));
+  padding: 24px;
+  background: var(--bg);
+  color: var(--ink);
+  font: 400 14px/1.45 'Plus Jakarta Sans', system-ui, sans-serif;
+  box-sizing: border-box;
+}
+.admin-wrapper *,
+.admin-wrapper *::before,
+.admin-wrapper *::after { box-sizing: border-box; }
+.admin-wrapper * { font-family: inherit; }
+
+/* low-specificity reset so .btn/.tab/.it etc. can still override */
+:where(.admin-wrapper) button {
+  font: inherit; color: inherit; background: none; border: 0; padding: 0; cursor: pointer;
+}
+
+/* small utilities (replaces Tailwind classes used in the TSX) */
+.admin-wrapper .flex { display: flex; }
+.admin-wrapper .grid { display: grid; }
+.admin-wrapper .flex-wrap { flex-wrap: wrap; }
+.admin-wrapper .items-start { align-items: flex-start; }
+.admin-wrapper .justify-end { justify-content: flex-end; }
+.admin-wrapper .gap-2 { gap: 8px; }
+.admin-wrapper .gap-3 { gap: 12px; }
+.admin-wrapper .ml-auto { margin-left: auto; }
+.admin-wrapper .mt-4 { margin-top: 16px; }
+.admin-wrapper .grid-cols-2 { grid-template-columns: 1fr 1fr; }
+.admin-wrapper .col-span-2 { grid-column: span 2; }
+.admin-wrapper .break-all { word-break: break-all; }
+
+/* =========================================================
+   2. SHELL
+   ========================================================= */
+.shell {
+  width: 100%;
+  max-width: 1480px;
+  min-height: calc((100vh - 48px) / var(--z));
+  margin: 0 auto;
+  padding: 24px 32px 32px;
+  background: var(--shell);
+  border-radius: 40px;
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+}
+
+/* =========================================================
+   3. TOP BAR
+   ========================================================= */
+.top {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 10px 14px 10px 20px;
+  background: var(--card);
+  border: 1px solid var(--line);
+  border-radius: 999px;
+  box-shadow: var(--sh);
+}
+.logo { display: flex; align-items: center; gap: 12px; font-size: 15px; font-weight: 700; letter-spacing: -0.01em; }
+.lg { width: 40px; height: 40px; border-radius: 50%; background: var(--ink); color: var(--on); display: grid; place-items: center; }
+
+.tabs { display: flex; gap: 2px; margin: 0 auto; padding: 5px; background: var(--soft); border-radius: 999px; }
+.tab { padding: 9px 22px; border-radius: 999px; color: var(--mut); font-weight: 600; font-size: 13.5px; transition: background .2s, color .2s; }
+.tab:hover { color: var(--ink); }
+.tab.on { background: var(--card); color: var(--ink); box-shadow: 0 2px 8px rgba(15, 23, 42, 0.08); }
+
+.circ {
+  position: relative;
+  width: 44px; height: 44px; flex-shrink: 0;
+  display: grid; place-items: center;
+  border-radius: 50%;
+  background: var(--soft); border: 1px solid var(--line); color: var(--ink);
+  transition: background .2s;
+}
+button.circ:hover { background: var(--line); }
+.menu-btn { display: none; }
+
+.nd { position: absolute; top: 10px; right: 11px; width: 9px; height: 9px; border-radius: 50%; background: #ef4444; border: 2px solid var(--soft); }
+
+.av { width: 44px; height: 44px; flex-shrink: 0; border-radius: 50%; background: var(--ink); color: var(--on); display: grid; place-items: center; font-weight: 700; font-size: 13px; }
+
+/* =========================================================
+   4. GREETING
+   ========================================================= */
+.greet { display: flex; align-items: center; justify-content: space-between; gap: 16px; padding: 0 8px; }
+.admin-wrapper h1 { margin: 0; font-size: 36px; line-height: 1.1; font-weight: 600; letter-spacing: -0.035em; color: var(--ink); }
+.admin-wrapper h1 span { font-weight: 300; color: var(--mut); }
+.pillb {
+  display: flex; align-items: center; gap: 10px;
+  padding: 11px 20px;
+  background: var(--card); border: 1px solid var(--line); border-radius: 999px;
+  box-shadow: var(--sh); font-weight: 600; font-size: 13px; color: var(--ink);
+}
+button.pillb:hover { background: var(--soft); }
+
+/* =========================================================
+   5. SIDEBAR (hover overlays the content, never pushes it)
+   ========================================================= */
+.main { display: flex; align-items: flex-start; gap: 24px; flex: 1; }
+.slot {
+  position: sticky; top: 24px; z-index: 30; align-self: flex-start;
+  width: 76px; flex-shrink: 0;
+  transition: width .35s cubic-bezier(.25, 1, .5, 1);
+}
+.slot:hover, .slot:focus-within { width: 232px; }
+.rail { width: 100%; display: flex; flex-direction: column; gap: 16px; }
+
+.grp { padding: 10px; background: var(--card); border: 1px solid var(--line); border-radius: 38px; box-shadow: var(--sh); overflow: hidden; }
+.it {
+  display: flex; align-items: center; gap: 16px;
+  width: 100%; height: 52px; margin: 4px 0; padding: 0 17px;
+  border-radius: 26px; color: var(--mut); white-space: nowrap; text-align: left;
+  transition: background .2s, color .2s;
+}
+.it:hover { background: var(--soft); color: var(--ink); }
+.it.on { background: var(--ink); color: var(--on); }
+.it span { opacity: 0; font-weight: 600; font-size: 13.5px; transition: opacity .2s; }
+.slot:hover .it span, .slot:focus-within .it span { opacity: 1; transition-delay: .08s; }
+
+/* =========================================================
+   6. CARDS & VIEWS
+   ========================================================= */
+.content { flex: 1; min-width: 0; }
+
+.card {
+  min-width: 0; min-height: 0;
+  padding: 24px;
+  display: flex; flex-direction: column;
+  background: var(--card); border: 1px solid var(--line); border-radius: 28px;
+  box-shadow: var(--sh);
+}
+
+.view { display: grid; gap: 24px; min-width: 0; }
+
+#v-dash {
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1.45fr) minmax(0, 1fr);
+  grid-template-rows: 520px auto;
+}
+.c1 { display: grid; grid-template-rows: 240px 1fr; gap: 24px; min-height: 0; }
+.c2 { min-height: 0; }
+.c3 { grid-column: 3; grid-row: 1; display: grid; grid-template-rows: 1fr 1fr; gap: 24px; min-height: 0; }
+.tblc { grid-column: 1 / -1; grid-row: 2; }   /* full width, grows to show every row */
+
+.hero { background: var(--ink); color: var(--on); border-color: transparent; justify-content: space-between; padding: 22px 24px; }
+.hero .circ { background: color-mix(in srgb, var(--on) 16%, transparent); color: var(--on); border: 0; }
+.big { font-size: 56px; font-weight: 600; letter-spacing: -0.04em; line-height: 1; }
+
+.c1 > .card:last-child { padding-top: 6px; padding-bottom: 6px; }
+
+.hd { display: flex; align-items: center; gap: 12px; margin-bottom: 16px; }
+.hd b { font-size: 16px; font-weight: 600; letter-spacing: -0.01em; }
+.hd .circ { width: 40px; height: 40px; }
+
+/* chart containers: Chart.js needs a relatively-positioned, sized parent */
+.cv { position: relative; flex: 1; min-height: 0; width: 100%; }
+.hero .cv { flex: none; height: 44px; max-height: 44px; }
+
+.lgd { margin-left: auto; display: flex; gap: 14px; font-size: 12px; color: var(--mut); }
+.lgd span { display: flex; align-items: center; gap: 6px; }
+.lgd i { width: 8px; height: 8px; border-radius: 50%; background: var(--ink); }
+.lgd i.g { background: var(--mut); }
+
+/* KPI rows */
+.kr { flex: 1; display: flex; align-items: center; justify-content: space-between; gap: 12px; border-top: 1px solid var(--line); }
+.kr:first-child { border-top: 0; }
+.kv { margin-top: 2px; font-size: 24px; font-weight: 700; letter-spacing: -0.02em; line-height: 1.1; }
+.mut { color: var(--mut); font-size: 12.5px; font-weight: 500; }
+.spw { position: relative; flex: none; width: 110px; height: 44px; }
+
+/* =========================================================
+   7. TABLE, INPUTS, BUTTONS
+   ========================================================= */
+.tw { overflow-x: auto; }   /* no fixed height, no inner vertical scroll: all rows visible */
+.admin-wrapper table { width: 100%; border-collapse: separate; border-spacing: 0; }
+.admin-wrapper th {
+  position: sticky; top: 0; z-index: 1;
+  padding: 10px 14px; background: var(--card);
+  font-size: 11.5px; font-weight: 600; text-align: left; white-space: nowrap;
+  color: var(--mut); border-bottom: 1px solid var(--line);
+}
+.admin-wrapper td { padding: 12px 14px; font-size: 13.5px; font-weight: 500; white-space: nowrap; border-bottom: 1px solid var(--line); }
+.admin-wrapper tbody tr { cursor: pointer; }
+.admin-wrapper tbody tr:hover td { background: var(--soft); }
+.admin-wrapper tbody tr:last-child td { border-bottom: 0; }
+.ini { width: 36px; height: 36px; flex-shrink: 0; display: grid; place-items: center; border-radius: 50%; background: var(--soft); border: 1px solid var(--line); font-weight: 700; font-size: 12px; }
+.dot { display: inline-block; width: 8px; height: 8px; margin-right: 8px; border-radius: 50%; background: var(--ink); }
+
+.inp {
+  width: 100%; height: 42px; padding: 0 18px;
+  background: var(--soft); color: var(--ink);
+  border: 1px solid var(--line); border-radius: 999px;
+  font: 500 13px 'Plus Jakarta Sans', system-ui, sans-serif;
+  transition: border-color .2s;
+}
+.inp:focus { outline: none; border-color: var(--ink); }
+select.inp { width: auto; cursor: pointer; }
+.admin-wrapper label.mut { display: block; margin-bottom: 6px; }
+
+.btn { padding: 12px 22px; background: var(--ink); color: var(--on); border-radius: 999px; font-weight: 600; font-size: 13px; transition: transform .15s, box-shadow .15s; }
+.btn:hover { transform: translateY(-1px); box-shadow: 0 6px 16px rgba(15, 23, 42, 0.18); }
+.btn.g { background: var(--soft); color: var(--ink); border: 1px solid var(--line); }
+
+:where(.admin-wrapper) :focus-visible { outline: 2px solid var(--ink); outline-offset: 2px; }
+
+/* =========================================================
+   8. MODAL, PROJECTS, TOGGLE (these classes were missing before)
+   ========================================================= */
+.ov {
+  position: fixed; inset: 0; z-index: 100;
+  align-items: center; justify-content: center; padding: 24px;
+  background: rgba(15, 23, 42, 0.45); backdrop-filter: blur(6px);
+  zoom: calc(1 / var(--z));      /* cancel the wrapper zoom so the overlay still fills the screen */
+}
+.ov > .card { zoom: var(--z); }  /* ...then re-apply it to the dialog itself */
+
+.ph {
+  position: relative; aspect-ratio: 16 / 10; margin-bottom: 16px;
+  display: grid; place-items: center;
+  background: var(--soft); border: 1px solid var(--line); border-radius: 20px; color: var(--mut);
+}
+.tagb { position: absolute; top: 10px; left: 10px; padding: 5px 11px; background: var(--ink); color: var(--on); border-radius: 999px; font-size: 11px; font-weight: 600; }
+
+.tg { position: relative; width: 46px; height: 26px; flex-shrink: 0; background: var(--line); border: 1px solid var(--line); border-radius: 999px; transition: background .2s; }
+.tg i { position: absolute; top: 2px; left: 2px; width: 20px; height: 20px; border-radius: 50%; background: var(--card); box-shadow: 0 1px 3px rgba(0, 0, 0, 0.25); transition: transform .2s, background .2s; }
+.tg[aria-checked='true'] { background: var(--ink); }
+.tg[aria-checked='true'] i { transform: translateX(20px); background: var(--on); }
+
+/* =========================================================
+   9. SMALLER SCREENS
+   ========================================================= */
+@media (max-width: 1100px) {
+  .admin-wrapper { padding: 12px; }
+  .shell { padding: 16px; border-radius: 28px; min-height: calc((100vh - 24px) / var(--z)); }
+  .slot { display: none; }
+  .top { flex-wrap: wrap; border-radius: 28px; }
+  .tabs { order: 5; width: 100%; margin: 0; overflow-x: auto; }
+  .greet { flex-direction: column; align-items: flex-start; }
+  .admin-wrapper h1 { font-size: 28px; }
+  #v-dash { grid-template-columns: minmax(0, 1fr); grid-template-rows: none; }
+  .c1, .c2, .c3, .tblc { grid-column: auto; grid-row: auto; }
+  .c1 { grid-template-rows: 230px 220px; }
+  .c2 { height: 380px; }
+  .c3 { grid-template-rows: 340px 340px; }
+  .view[style*='2fr'] { grid-template-columns: minmax(0, 1fr) !important; }
+}

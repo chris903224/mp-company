@@ -1,0 +1,9 @@
+.plan{display:none}
+.live .plan{display:block;position:absolute;z-index:6;top:50%;right:calc(max(14px,(100% - 1200px)/2) + 76px);width:clamp(220px,22vw,340px);transform:translateY(-50%);color:rgba(255,255,255,.88);pointer-events:none;fill:none;stroke:currentColor;stroke-width:1;stroke-linejoin:miter}
+.plan path{stroke-dasharray:1;stroke-dashoffset:0}
+.g1 path{animation:dr 1.8s .7s var(--ease) both}
+@keyframes dr{from{stroke-dashoffset:1}}
+.g2{opacity:var(--p2,0)}
+.g3 path{stroke-dashoffset:calc(1 - var(--p3,0))}
+.g4 path{stroke-dashoffset:calc(1 - var(--p4,0))}
+@media(max-width:960px){.live .plan{display:none}}

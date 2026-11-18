@@ -1,0 +1,20 @@
+.ct{padding:var(--sec) 0;border-top:1px solid var(--ln);background:var(--bg2)}
+.cg{display:grid;grid-template-columns:.9fr 1.1fr;gap:clamp(40px,7vw,96px)}
+.ct h2{font-size:clamp(2.1rem,4.6vw,3.8rem)}
+.info{list-style:none;margin:30px 0 0;padding:0}
+.info li{padding:12px 0;border-top:1px solid var(--ln);display:grid;grid-template-columns:100px 1fr;gap:12px;font-size:.95rem}
+.info li span:first-child{color:var(--mu);font-size:.85rem}
+.ph{color:var(--mu);font-style:italic}
+form{display:grid;grid-template-columns:1fr 1fr;gap:22px;background:var(--bg);padding:clamp(22px,4vw,40px);border:1px solid var(--ln)}
+.f{display:flex;flex-direction:column;gap:4px}.f.full{grid-column:1/-1}
+label{font-size:.85rem;color:var(--mu)}
+input,select,textarea{font:inherit;color:var(--ink);background:transparent;border:0;border-bottom:1px solid var(--fld);padding:10px 0;border-radius:0;width:100%}
+textarea{min-height:110px;resize:vertical}
+input:focus,select:focus,textarea:focus{border-color:var(--ink)}
+input:focus-visible,select:focus-visible,textarea:focus-visible{outline:2px solid var(--ink);outline-offset:2px}
+.bad input,.bad select,.bad textarea{border-color:var(--err)}
+.err{color:var(--err);font-size:.82rem}
+.hp{position:absolute;left:-999px}
+.demo{grid-column:1/-1;margin:0;font-size:.85rem;color:var(--mu);border:1px dashed var(--fld);padding:10px 12px}
+.msg{grid-column:1/-1;padding:12px 14px;font-size:.92rem;border:1px solid}.msg:empty{display:none}
+.msg.ok{border-color:var(--ok);color:var(--ok)}.msg.no{border-color:var(--err);color:var(--err)}

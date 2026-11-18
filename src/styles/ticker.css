@@ -1,0 +1,6 @@
+.tick{border-block:1px solid var(--ln);overflow:hidden;padding:18px 0}
+.tt{display:flex;width:max-content;animation:tk 50s linear infinite}
+.tick:hover .tt{animation-play-state:paused}
+.tt span{font:italic 400 clamp(1.2rem,2.2vw,1.8rem) var(--serif);padding-right:40px;white-space:nowrap}
+.tt span::after{content:"/";margin-left:40px;font-style:normal;color:var(--mu)}
+@keyframes tk{to{transform:translateX(-50%)}}

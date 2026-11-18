@@ -1,0 +1,9 @@
+*,*::before,*::after{box-sizing:border-box}
+html{scroll-behavior:smooth;scroll-padding-top:var(--nav);-webkit-text-size-adjust:100%}
+body{margin:0;background:var(--bg);color:var(--ink);font:400 1rem/1.7 var(--sans);overflow-x:hidden;-webkit-font-smoothing:antialiased;transition:background-color .4s,color .4s}
+body.lock{overflow:hidden}
+a{color:inherit}img{display:block;max-width:100%}
+h1,h2,h3{font-family:var(--serif);font-weight:400;letter-spacing:-.03em;line-height:1.08;margin:0 0 .5em;text-wrap:balance}
+h2{font-size:clamp(2rem,4.6vw,3.8rem)}h3{font-size:1.5rem}
+p{margin:0 0 1em;text-wrap:pretty}
+:focus-visible{outline:2px solid var(--ink);outline-offset:3px}

@@ -1,0 +1,6 @@
+.pr{padding:var(--sec) 0;border-top:1px solid var(--ln)}
+.pr h2{margin-bottom:48px}
+.steps{list-style:none;margin:0;padding:0;display:grid;grid-template-columns:repeat(4,1fr);gap:28px}
+.steps li{border-top:1px solid var(--ink);padding-top:22px}
+.steps b{display:block;font:italic 400 clamp(2.8rem,5vw,4.4rem)/1 var(--serif);margin-bottom:14px}
+.steps p{color:var(--mu);font-size:.95rem}

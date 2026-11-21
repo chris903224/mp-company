@@ -6,11 +6,9 @@ import StageDetail from './StageDetail';
 
 interface HeroProps {
   ref?: Ref<HTMLElement>;
-  serviceCount?: number; // ✅ Idinagdag
-  clientCount?: number;  // ✅ Idinagdag
 }
 
-export default function Hero({ ref, serviceCount = 3, clientCount = 3 }: HeroProps) {
+export default function Hero({ ref }: HeroProps) {
   const sectionRef = useRef<HTMLElement | null>(null);
   const pinRef = useRef<HTMLDivElement | null>(null);
   const zmRefs = useRef<Array<HTMLDivElement | null>>([]);
@@ -58,8 +56,8 @@ export default function Hero({ ref, serviceCount = 3, clientCount = 3 }: HeroPro
                   <div className="hc">
                     <h1 className="a">{stage.title}</h1>
                     <p className="a">{stage.body}</p>
-                    {/* ✅ IPINASA NATIN YUNG COUNTS */}
-                    <StageDetail index={i} compact serviceCount={serviceCount} clientCount={clientCount} />
+                    {/* ✅ Hindi na nagpapasa ng stats */}
+                    <StageDetail index={i} compact />
                     <div className="cta a">
                       <a className="btn btn-p" href="#services" tabIndex={ctaTabIndex}>Explore Our Services</a>
                       <a className="btn" href="#contact" tabIndex={ctaTabIndex}>Request a Quote</a>

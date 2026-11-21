@@ -4,7 +4,7 @@ import type { HeroStage, ServiceItem, StepItem } from '../types';
 export const NAV_IDS = [
   'about',
   'services',
-  'walkthrough',
+  'projects',
   'process',
   'contact',
 ] as const;

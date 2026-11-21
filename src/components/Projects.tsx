@@ -4,11 +4,10 @@ import { useReveal } from '../hooks/useReveal';
 import type { ProjectItem } from '../types';
 
 /* ───────── HARDCODED LOCAL IMAGES ───────── */
-// Gumamit ng "/" sa simula para mag-point sa public folder root
 const HARDCODED_PROJECTS = [
   {
     id: '1',
-    img: '/work-1.png', 
+    img: '/work-1.png',
     alt: 'Network Cabling Project',
     captionTitle: 'Structured Cabling',
     captionBody: 'Professional network cabling setup.',
@@ -16,7 +15,7 @@ const HARDCODED_PROJECTS = [
   },
   {
     id: '2',
-    img: '/work-2.png', 
+    img: '/work-2.png',
     alt: 'Server Rack Setup',
     captionTitle: 'Server Rack',
     captionBody: 'Organized server rack installation.',
@@ -24,7 +23,7 @@ const HARDCODED_PROJECTS = [
   },
   {
     id: '3',
-    img: '/work-3.png', 
+    img: '/work-3.png',
     alt: 'CCTV Installation',
     captionTitle: 'CCTV Surveillance',
     captionBody: 'Security camera system setup.',
@@ -32,7 +31,7 @@ const HARDCODED_PROJECTS = [
   },
   {
     id: '4',
-    img: '/work-4.png', 
+    img: '/work-4.png',
     alt: 'Security System',
     captionTitle: 'Access Control',
     captionBody: 'Modern security access points.',
@@ -40,7 +39,7 @@ const HARDCODED_PROJECTS = [
   },
   {
     id: '5',
-    img: '/work-5.png', 
+    img: '/work-5.png',
     alt: 'IT Infrastructure',
     captionTitle: 'Tech Infrastructure',
     captionBody: 'Core IT infrastructure components.',
@@ -51,15 +50,15 @@ const HARDCODED_PROJECTS = [
 /* ───────── Data ───────── */
 
 const CATEGORIES = [
-  { 
-    id: 'network', 
-    label: 'Network Infrastructure', 
-    match: /cabl|network|\blan\b|fib(er|re)|rack|patch|switch|wi-?fi|router|terminat|conduit/i 
+  {
+    id: 'network',
+    label: 'Network Infrastructure',
+    match: /cabl|network|\blan\b|fib(er|re)|rack|patch|switch|wi-?fi|router|terminat|conduit/i
   },
-  { 
-    id: 'security', 
-    label: 'CCTV & Security', 
-    match: /cctv|camera|surveillance|security|access control|alarm|\bdvr\b|\bnvr\b/i 
+  {
+    id: 'security',
+    label: 'CCTV & Security',
+    match: /cctv|camera|surveillance|security|access control|alarm|\bdvr\b|\bnvr\b/i
   },
 ];
 
@@ -97,36 +96,34 @@ function Card({ item, onOpen }: { item: any; onOpen: (index: number) => void }) 
 /* ───────── Page ───────── */
 
 interface ProjectsProps {
-  projects: ProjectItem[]; 
+  projects: ProjectItem[];
   isLoading: boolean;
 }
 
-// FIXED: Ginamitan ng underscore (_) ang projects para di magka-warning na unused
-// O pwede rin na tanggalin sa destructuring kung di talaga gagamitin: ({ isLoading }: ProjectsProps)
 export default function Projects({ projects: _projects, isLoading }: ProjectsProps) {
   const [filter, setFilter] = useState('all');
   const [open, setOpen] = useState<number | null>(null);
   const dialogRef = useRef<HTMLDialogElement | null>(null);
 
-  // --- LOGIC: Use Hardcoded Local Data ---
+  // Use Hardcoded Local Data
   const ITEMS = useMemo(() => {
     return HARDCODED_PROJECTS.map((p, index) => {
       const categoryObj = CATEGORIES.find(c => c.id === p.category) || CATEGORIES[0];
-      
-      return { 
-        index, 
-        img: p.img, 
-        alt: p.alt, 
-        title: p.captionTitle, 
-        body: p.captionBody, 
+
+      return {
+        index,
+        img: p.img,
+        alt: p.alt,
+        title: p.captionTitle,
+        body: p.captionBody,
         category: categoryObj
       };
     });
-  }, []); 
+  }, []);
 
   const TABS = useMemo(() => {
     return [
-      { id: 'all', label: 'All' }, 
+      { id: 'all', label: 'All' },
       ...CATEGORIES.filter((c) => ITEMS.some((i) => i.category.id === c.id))
     ];
   }, [ITEMS]);
@@ -135,7 +132,7 @@ export default function Projects({ projects: _projects, isLoading }: ProjectsPro
     () => (filter === 'all' ? ITEMS : ITEMS.filter((i) => i.category.id === filter)),
     [filter, ITEMS],
   );
-  
+
   const current = open === null ? null : ITEMS[open];
   const pos = current ? visible.findIndex((i) => i.index === current.index) : -1;
 
@@ -155,7 +152,7 @@ export default function Projects({ projects: _projects, isLoading }: ProjectsPro
 
   if (isLoading && ITEMS.length === 0) {
     return (
-      <section className="pg" id="portfolio">
+      <section className="pg" id="projects">
         <div className="wrap" style={{ textAlign: 'center', padding: '4rem 0', color: 'var(--mut)' }}>
           Loading portfolio...
         </div>
@@ -179,7 +176,8 @@ export default function Projects({ projects: _projects, isLoading }: ProjectsPro
         </div>
       </section>
 
-      <section className="pg" id="portfolio" aria-labelledby="pg-title">
+      {/* ✅ FIXED: id="projects" para tugma sa NAV_IDS sa content.ts */}
+      <section className="pg" id="projects" aria-labelledby="pg-title">
         <div className="wrap">
           <div className="pg-head">
             <h2 id="pg-title" className="pg-title">Selected work</h2>
@@ -222,29 +220,31 @@ export default function Projects({ projects: _projects, isLoading }: ProjectsPro
         >
           {current && (
             <div className="pg-panel-fullscreen">
-              <img 
-                key={current.index} 
-                className="pg-dimg-full" 
-                src={current.img} 
-                alt={current.alt} 
-                onError={hideBroken} 
+              {/* Main Image */}
+              <img
+                key={current.index}
+                className="pg-dimg-full"
+                src={current.img}
+                alt={current.alt}
+                onError={hideBroken}
               />
-              
+
+              {/* Navigation Arrows (Floating) */}
               {visible.length > 1 && (
                 <>
-                  <button 
-                    type="button" 
-                    className="pg-nav-btn prev" 
-                    onClick={(e) => { e.stopPropagation(); step(-1); }} 
+                  <button
+                    type="button"
+                    className="pg-nav-btn prev"
+                    onClick={(e) => { e.stopPropagation(); step(-1); }}
                     aria-label="Previous image"
                   >
                     <Icon d={ICONS.prev} />
                   </button>
-                  
-                  <button 
-                    type="button" 
-                    className="pg-nav-btn next" 
-                    onClick={(e) => { e.stopPropagation(); step(1); }} 
+
+                  <button
+                    type="button"
+                    className="pg-nav-btn next"
+                    onClick={(e) => { e.stopPropagation(); step(1); }}
                     aria-label="Next image"
                   >
                     <Icon d={ICONS.next} />
@@ -252,10 +252,11 @@ export default function Projects({ projects: _projects, isLoading }: ProjectsPro
                 </>
               )}
 
-              <button 
-                type="button" 
-                className="pg-close-btn" 
-                onClick={() => dialogRef.current?.close()} 
+              {/* Close Button (Floating) */}
+              <button
+                type="button"
+                className="pg-close-btn"
+                onClick={() => dialogRef.current?.close()}
                 aria-label="Close viewer"
               >
                 <Icon d={ICONS.close} />

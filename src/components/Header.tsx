@@ -11,10 +11,11 @@ interface HeaderProps {
   heroRef: RefObject<HTMLElement | null>;
 }
 
+// ✅ FIXED: Tamang href at id para sa bawat section
 const NAV_LINKS = [
   { href: '#about', id: 'about', label: 'About' },
   { href: '#services', id: 'services', label: 'Services' },
-  { href: '#walkthrough', id: 'walkthrough', label: 'Projects' },
+  { href: '#projects', id: 'projects', label: 'Projects' },
   { href: '#contact', id: 'contact', label: 'Contact' },
 ] as const;
 

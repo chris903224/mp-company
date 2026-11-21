@@ -277,3 +277,123 @@ select.inp { width: auto; cursor: pointer; }
   .c3 { grid-template-rows: 340px 340px; }
   .view[style*='2fr'] { grid-template-columns: minmax(0, 1fr) !important; }
 }
+/* =========================================================
+   TOAST NOTIFICATION (Centered Modal Style)
+   ========================================================= */
+#toast {
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%) scale(0.9);
+  background: var(--ink);
+  color: var(--on);
+  padding: 1.2rem 2.5rem;
+  border-radius: 100px;
+  font-size: 1.1rem;
+  font-weight: 600;
+  box-shadow: 0 20px 50px rgba(0, 0, 0, 0.3);
+  z-index: 9999;
+  display: none;
+  opacity: 0;
+  transition: opacity 0.3s ease, transform 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+  pointer-events: none;
+  align-items: center;
+  justify-content: center;
+  gap: 0.8rem;
+  border: 1px solid rgba(255, 255, 255, 0.15);
+}
+
+/* Kapag may laman yung toast, i-animate natin papasok na may pop effect */
+#toast.show {
+  display: flex;
+  opacity: 1;
+  transform: translate(-50%, -50%) scale(1);
+}
+
+/* Para sa dark mode, gawing mas puti yung border para kitang-kita */
+[data-theme=dark] #toast {
+  border: 1px solid rgba(255, 255, 255, 0.3);
+}
+/* =========================================================
+   LOGOUT CONFIRMATION MODAL
+   ========================================================= */
+.logout-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.4);
+  backdrop-filter: blur(4px);
+  z-index: 9999;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  animation: fadeIn 0.2s ease-out;
+}
+
+.logout-modal {
+  background: var(--card);
+  padding: 2.5rem;
+  border-radius: 2rem;
+  width: 90%;
+  max-width: 24rem;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.15);
+  animation: popIn 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+}
+
+.logout-icon {
+  width: 4.5rem;
+  height: 4.5rem;
+  border-radius: 50%;
+  background: rgba(239, 68, 68, 0.1);
+  color: #ef4444;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 1rem;
+}
+
+.logout-modal h3 {
+  font-size: 1.5rem;
+  font-weight: 700;
+  margin: 0 0 0.5rem 0;
+  color: var(--ink);
+}
+
+.logout-modal p {
+  color: var(--mut);
+  font-size: 0.95rem;
+  margin: 0 0 2rem 0;
+}
+
+.logout-actions {
+  display: flex;
+  gap: 1rem;
+  width: 100%;
+}
+
+.logout-actions button {
+  flex: 1;
+  justify-content: center;
+}
+
+.logout-btn {
+  background: #ef4444 !important;
+  color: white !important;
+}
+.logout-btn:hover {
+  background: #dc2626 !important;
+}
+
+/* Animations */
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+@keyframes popIn {
+  from { opacity: 0; transform: scale(0.9) translateY(10px); }
+  to { opacity: 1; transform: scale(1) translateY(0); }
+}

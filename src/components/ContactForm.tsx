@@ -1,4 +1,4 @@
-import { BUSINESS, SERVICE_OPTIONS } from '../data/content';
+import { SERVICE_OPTIONS } from '../data/content';
 import { useContactForm } from '../hooks/useContactForm';
 
 interface ContactFormProps {
@@ -20,16 +20,11 @@ export default function ContactForm({ preferredService }: ContactFormProps) {
           aria-describedby="e-name"
           aria-invalid={errors.name ? 'true' : undefined}
           onBlur={onBlur('name')}
-          onInput={onInput('name')}
+          onChange={onInput('name')}
         />
         <span className="err" id="e-name">
           {errors.name ?? ''}
         </span>
-      </div>
-
-      <div className="f">
-        <label htmlFor="org">Company / Organization</label>
-        <input id="org" name="org" autoComplete="organization" />
       </div>
 
       <div className={`f${errors.email ? ' bad' : ''}`}>
@@ -43,7 +38,7 @@ export default function ContactForm({ preferredService }: ContactFormProps) {
           aria-describedby="e-email"
           aria-invalid={errors.email ? 'true' : undefined}
           onBlur={onBlur('email')}
-          onInput={onInput('email')}
+          onChange={onInput('email')}
         />
         <span className="err" id="e-email">
           {errors.email ?? ''}
@@ -60,7 +55,7 @@ export default function ContactForm({ preferredService }: ContactFormProps) {
           aria-describedby="e-phone"
           aria-invalid={errors.phone ? 'true' : undefined}
           onBlur={onBlur('phone')}
-          onInput={onInput('phone')}
+          onChange={onInput('phone')}
         />
         <span className="err" id="e-phone">
           {errors.phone ?? ''}
@@ -76,11 +71,13 @@ export default function ContactForm({ preferredService }: ContactFormProps) {
           aria-describedby="e-svcsel"
           aria-invalid={errors.svcsel ? 'true' : undefined}
           onBlur={onBlur('svcsel')}
-          onInput={onInput('svcsel')}
+          onChange={onInput('svcsel')}
         >
           <option value="">Select a service</option>
           {SERVICE_OPTIONS.map((opt) => (
-            <option key={opt}>{opt}</option>
+            <option key={opt} value={opt}>
+              {opt}
+            </option>
           ))}
         </select>
         <span className="err" id="e-svcsel">
@@ -97,7 +94,7 @@ export default function ContactForm({ preferredService }: ContactFormProps) {
           aria-describedby="e-msg"
           aria-invalid={errors.msg ? 'true' : undefined}
           onBlur={onBlur('msg')}
-          onInput={onInput('msg')}
+          onChange={onInput('msg')}
         />
         <span className="err" id="e-msg">
           {errors.msg ?? ''}
@@ -108,19 +105,19 @@ export default function ContactForm({ preferredService }: ContactFormProps) {
         <label htmlFor="website">Leave this field empty</label>
         <input id="website" name="website" tabIndex={-1} autoComplete="off" />
       </div>
-
-      <p className="demo">
-        <b>Frontend demonstration:</b> this form validates input but is not connected to an email or
-        submission service, so nothing is delivered to the business.
-      </p>
-
+      
       <div className={`msg${status.kind !== 'idle' ? ' ' + status.kind : ''}`} id="fm" role="status" aria-live="polite">
         {status.text}
       </div>
 
       <div className="f full">
-        <button className="btn btn-p" type="submit" style={{ alignSelf: 'flex-start' }}>
-          Submit Inquiry
+        <button 
+          className="btn btn-p" 
+          type="submit" 
+          style={{ alignSelf: 'flex-start' }}
+          disabled={status.kind === 'loading'}
+        >
+          {status.kind === 'loading' ? 'Sending...' : 'Submit Inquiry'}
         </button>
       </div>
     </form>

@@ -1,6 +1,72 @@
-footer{border-top:1px solid var(--ink);padding:clamp(52px,7vw,84px) 0 28px;font-size:.92rem;color:var(--mu)}
-.fg{display:grid;grid-template-columns:1.5fr 1fr 1fr 1.3fr;gap:36px}
-footer h2{font:500 .75rem var(--sans);letter-spacing:.14em;text-transform:uppercase;color:var(--ink);margin:0 0 14px}
-footer ul{list-style:none;margin:0;padding:0;display:grid;gap:8px}
-footer a{text-decoration:none}footer a:hover{color:var(--ink);text-decoration:underline}
-.copy{margin-top:44px;padding-top:18px;border-top:1px solid var(--ln);font-size:.82rem;display:flex;flex-wrap:wrap;justify-content:space-between;gap:8px}
+footer {
+  border-top: 1px solid var(--ink);
+  padding: clamp(52px, 7vw, 84px) 0 28px;
+  font-size: .92rem;
+  color: var(--mu);
+}
+
+.fg {
+  display: grid;
+  grid-template-columns: 1.5fr 1fr 1fr 1.3fr;
+  gap: 36px;
+}
+
+footer h2 {
+  font: 500 .75rem var(--sans);
+  letter-spacing: .14em;
+  text-transform: uppercase;
+  color: var(--ink);
+  margin: 0 0 14px;
+}
+
+footer ul {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: grid;
+  gap: 8px;
+}
+
+footer a {
+  text-decoration: none;
+  color: inherit;
+  transition: color 0.2s;
+}
+
+footer a:hover {
+  color: var(--ink);
+  text-decoration: underline;
+}
+
+/* ✅ Inayos ang line-height at margin para hindi lumaki ang gap */
+footer li {
+  line-height: 1.5;
+}
+
+footer .ph {
+  font-style: italic;
+  color: var(--mu);
+  margin: 0;
+  padding: 0;
+}
+
+.copy {
+  margin-top: 44px;
+  padding-top: 18px;
+  border-top: 1px solid var(--ln);
+  font-size: .82rem;
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  gap: 8px;
+}
+
+/* ✅ Responsive adjustments */
+@media (max-width: 900px) {
+  .fg { grid-template-columns: 1fr 1fr; gap: 32px; }
+}
+
+@media (max-width: 600px) {
+  .fg { grid-template-columns: 1fr; gap: 24px; }
+  .copy { flex-direction: column; gap: 12px; }
+}

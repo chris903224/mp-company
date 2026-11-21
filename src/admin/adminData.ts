@@ -1,3 +1,4 @@
+// src/admin/adminData.ts
 export const STAGES = [
   'Initial Consultation',
   'Assessment',
@@ -8,7 +9,6 @@ export const STAGES = [
 export const SERVICES_LIST = [
   'Network & Infrastructure',
   'CCTV & Surveillance',
-  'IT Technical Support',
   'Hardware & Software',
 ];
 
@@ -18,7 +18,7 @@ export interface Inquiry {
   company: string;
   email: string;
   phone: string;
-  serviceIndex: number;
+  serviceindex: number;
   message: string;
   stage: number;
   date: string;
@@ -32,12 +32,18 @@ export interface Project {
   isSample: boolean;
 }
 
-// Business Info ay ginawang interface para ready sa DB
+// ✅ Siguraduhing naka-export ito at may tamang properties
 export interface BusinessInfo {
-  id: number;
-  label: string;
-  icon: string;
-  type: string;
-  placeholder: string;
-  value: string | null;
+  id?: number;
+  phone: string;
+  email: string;
+  hours: string;
+  address: string;
+}
+
+// ✅ Siguraduhing naka-export ito
+export interface ServicesInfo {
+  network_desc: string;
+  cctv_desc: string;
+  hardware_desc: string;
 }

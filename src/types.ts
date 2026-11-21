@@ -23,6 +23,9 @@ export interface ServiceItem {
 }
 
 export interface ProjectItem {
+  id?: string | number;       // ✅ Ginawang optional
+  company?: string;           // ✅ Optional
+  category?: string;          // ✅ Optional
   img: string;
   alt: string;
   captionTitle: string;

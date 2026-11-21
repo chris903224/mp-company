@@ -1,6 +1,10 @@
-import { BUSINESS } from '../data/content';
+import type { BusinessInfo } from '../hooks/useSiteData';
 
-export default function Footer() {
+interface FooterProps {
+  business: BusinessInfo | null;
+}
+
+export default function Footer({ business }: FooterProps) {
   return (
     <footer>
       <div className="wrap">
@@ -36,17 +40,28 @@ export default function Footer() {
           <div>
             <h2>Contact</h2>
             <ul>
-              <li>{BUSINESS.address}</li>
-              <li><a href={BUSINESS.phoneHref}>{BUSINESS.phone}</a></li>
-              <li className="ph">{BUSINESS.emailPendingShort}</li>
-              <li>{BUSINESS.hoursShort}</li>
+              <li>{business?.address || 'Donia Elena Tower, P. Sanchez St. corner 3rd St., Santa Mesa, Manila'}</li>
+              <li>
+                <a href={`tel:${business?.phone?.replace(/\s/g, '') || '+639567296257'}`}>
+                  {business?.phone || '+63 956 729 6257'}
+                </a>
+              </li>
+              <li>
+                {/* ✅ Naka-mailto na link at dynamic fallback */}
+                <a 
+                  href={`mailto:${business?.email || 'mpmicroitsolutions@gmail.com'}`}
+                  style={{ wordBreak: 'break-all' }} // Para hindi umapaw sa mobile
+                >
+                  {business?.email || 'mpmicroitsolutions@gmail.com'}
+                </a>
+              </li>
+              <li>{business?.hours || 'Mon – Fri, 8:00 AM – 5:00 PM'}</li>
             </ul>
           </div>
         </div>
         <div className="copy">
           <span>
-            © <span id="yr">{new Date().getFullYear()}</span> MP Micro IT Solutions. All rights
-            reserved.
+            © <span id="yr">{new Date().getFullYear()}</span> MP Micro IT Solutions. All rights reserved.
           </span>
           <span>Content pending owner confirmation.</span>
         </div>

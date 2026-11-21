@@ -4,15 +4,14 @@ import {
   useRef,
   useState,
   type FormEvent,
+  type ChangeEvent,
 } from 'react';
 import { SERVICE_OPTIONS } from '../data/content';
-
-/** Set to a URL to enable real submission. `null` = frontend demonstration. */
-const FORM_ENDPOINT: string | null = null;
+import { supabase } from '../lib/supabase';
 
 type FieldId = 'name' | 'email' | 'phone' | 'svcsel' | 'msg';
 type Errors = Partial<Record<FieldId, string>>;
-type Status = { kind: 'idle' | 'ok' | 'no'; text: string };
+type Status = { kind: 'idle' | 'ok' | 'no' | 'loading'; text: string };
 type FormField = HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement;
 
 const RULES: Record<FieldId, (v: string) => string> = {
@@ -37,7 +36,6 @@ export function useContactForm(preferredService: string | null) {
   const [status, setStatus] = useState<Status>({ kind: 'idle', text: '' });
   const formRef = useRef<HTMLFormElement | null>(null);
 
-  // Preselect a service coming from the "Request this service" button.
   useEffect(() => {
     if (!preferredService) return;
     const select = formRef.current?.querySelector<HTMLSelectElement>('#svcsel');
@@ -77,12 +75,9 @@ export function useContactForm(preferredService: string | null) {
     [check]
   );
 
-  // React 19 types onInput as InputEventHandler<T> whose event is InputEvent<T>.
-  // FormEvent<T> is the common base for InputEvent<T> and ChangeEvent<T>, so a
-  // handler typed with FormEvent<T> is assignable to onInput on any element.
   const onInput = useCallback(
     <T extends FormField>(id: FieldId) =>
-      (e: FormEvent<T>) => {
+      (e: ChangeEvent<T>) => {
         if (errors[id]) validate(id, e.currentTarget.value);
       },
     [errors, validate]
@@ -114,44 +109,43 @@ export function useContactForm(preferredService: string | null) {
         return;
       }
 
-      if (!FORM_ENDPOINT) {
+      setStatus({ kind: 'loading', text: 'Sending your inquiry...' });
+
+      try {
+        const name = (form.querySelector('#name') as HTMLInputElement).value.trim();
+        const org = (form.querySelector('#org') as HTMLInputElement)?.value.trim() || '';
+        const email = (form.querySelector('#email') as HTMLInputElement).value.trim();
+        const phone = (form.querySelector('#phone') as HTMLInputElement).value.trim();
+        const svcsel = (form.querySelector('#svcsel') as HTMLSelectElement).value;
+        const msg = (form.querySelector('#msg') as HTMLTextAreaElement).value.trim();
+        
+        const serviceIndex = SERVICE_OPTIONS.indexOf(svcsel);
+
+        // ✅ FIXED: Changed 'serviceIndex' to 'serviceindex' (all lowercase) to match DB
+        const { error } = await supabase.from('inquiries').insert([
+          {
+            name,
+            company: org,
+            email,
+            phone,
+            serviceindex: serviceIndex >= 0 ? serviceIndex : 3, 
+            message: msg,
+            stage: 0, 
+            date: new Date().toLocaleDateString('en-US', { month: 'short', day: '2-digit' })
+          }
+        ]);
+
+        if (error) throw error;
+
         setStatus({
           kind: 'ok',
-          text:
-            'Form checked successfully. This is a frontend demonstration, so your inquiry was not sent. Your entries have been kept.',
+          text: 'Thank you! Your inquiry has been sent successfully.',
         });
-        return;
-      }
-
-      const payload: Record<string, string> = {};
-      const fieldMap: Record<string, string> = {
-        name: 'name',
-        org: 'org',
-        email: 'email',
-        phone: 'phone',
-        svcsel: 'service',
-        msg: 'message',
-        website: 'website',
-      };
-      Object.entries(fieldMap).forEach(([domId, key]) => {
-        const el = form.querySelector<FormField>('#' + domId);
-        payload[key] = (el?.value ?? '').trim();
-      });
-
-      setStatus({ kind: 'ok', text: 'Sending…' });
-      try {
-        const res = await fetch(FORM_ENDPOINT, {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify(payload),
-        });
-        if (!res.ok) throw new Error('bad response');
-        setStatus({ kind: 'ok', text: 'Your inquiry was sent.' });
         form.reset();
-      } catch {
+      } catch (err: any) {
         setStatus({
           kind: 'no',
-          text: 'Your inquiry could not be sent. Please try again.',
+          text: err.message || 'Something went wrong. Please try again.',
         });
       }
     },

@@ -1,12 +1,23 @@
 import { useState } from 'react';
 import { SERVICES, SERVICE_IMAGES, SERVICE_OPTIONS } from '../data/content';
+import type { ServicesInfo } from '../hooks/useSiteData'; // <-- Idinagdag
 
 interface ServicesProps {
   onRequestService: (service: string) => void;
+  servicesData: ServicesInfo | null; // <-- Idinagdag
 }
 
-export default function Services({ onRequestService }: ServicesProps) {
+export default function Services({ onRequestService, servicesData }: ServicesProps) {
   const [active, setActive] = useState(0);
+
+  // Helper para makuha yung dynamic description base sa index
+  const getDynamicDesc = (index: number) => {
+    if (!servicesData) return null;
+    if (index === 0) return servicesData.network_desc; // Network
+    if (index === 1) return servicesData.hardware_desc; // Hardware
+    if (index === 2) return servicesData.cctv_desc;     // CCTV
+    return null;
+  };
 
   const handleRequest = (index: number) => {
     const option = SERVICE_OPTIONS[index] ?? SERVICE_OPTIONS[0];
@@ -44,6 +55,8 @@ export default function Services({ onRequestService }: ServicesProps) {
           <ul className="l" id="slist">
             {SERVICES.map((svc, i) => {
               const isOpen = active === i;
+              const dynamicDesc = getDynamicDesc(i); // <-- Kunin ang dynamic desc
+
               return (
                 <li key={svc.id} className={isOpen ? 'on' : undefined}>
                   <h3>
@@ -60,9 +73,14 @@ export default function Services({ onRequestService }: ServicesProps) {
                   <div className="sd" id={`sd${i}`}>
                     <div>
                       <ul>
-                        {svc.bullets.map((b) => (
-                          <li key={b}>{b}</li>
-                        ))}
+                        {/* Kung may dynamic description, yun ang gagamitin. Kung wala, yung dating bullets. */}
+                        {dynamicDesc ? (
+                          <li>{dynamicDesc}</li>
+                        ) : (
+                          svc.bullets.map((b) => (
+                            <li key={b}>{b}</li>
+                          ))
+                        )}
                       </ul>
                       <button
                         className="btn rq"

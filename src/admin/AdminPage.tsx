@@ -1,3 +1,4 @@
+import { useState, useEffect } from 'react';
 import AdminLayout from './AdminLayout';
 import DashboardView from './DashboardView';
 import ProjectsView from './ProjectsView';
@@ -5,11 +6,29 @@ import ServicesView from './ServicesView';
 import { useAdmin } from './useAdmin';
 import { STAGES, SERVICES_LIST } from './adminData';
 import { Ic } from './AdminIcons';
+import AdminLogin from '../pages/AdminLogin'; // ✅ Idinagdag ang import
 import './admin.css';
 
 export default function AdminPage() {
+  // 1. State para i-check kung verified na ang OTP
+  const [isVerified, setIsVerified] = useState(false);
+
+  // 2. I-check ang session storage pagka-load
+  useEffect(() => {
+    const verified = sessionStorage.getItem('otp_verified');
+    if (verified === 'true') {
+      setIsVerified(true);
+    }
+  }, []);
+
   const admin = useAdmin();
 
+  // 3. Kapag hindi pa verified, ipakita ang Login page
+  if (!isVerified) {
+    return <AdminLogin />;
+  }
+
+  // 4. Kapag verified na, ipakita ang normal Admin Dashboard
   return (
     <AdminLayout 
       activeTab={admin.activeTab} 
@@ -25,7 +44,7 @@ export default function AdminPage() {
         <>
           {admin.activeTab === 'dash' && <DashboardView admin={admin} />}
           {admin.activeTab === 'proj' && <ProjectsView admin={admin} />}
-          {admin.activeTab === 'svc' && <ServicesView />}
+          {admin.activeTab === 'svc' && <ServicesView admin={admin} />}
         </>
       )}
       
@@ -54,7 +73,11 @@ export default function AdminPage() {
               </div>
               <div style={{ gridColumn: 'span 2' }}>
                 <div className="mut">Service needed</div>
-                <div>{SERVICES_LIST[admin.selectedInquiry.serviceIndex]}</div>
+                <div>
+                  {admin.selectedInquiry.serviceindex !== undefined && admin.selectedInquiry.serviceindex !== null 
+                    ? SERVICES_LIST[admin.selectedInquiry.serviceindex] 
+                    : 'N/A'}
+                </div>
               </div>
               <div style={{ gridColumn: 'span 2' }}>
                 <div className="mut">Message</div>
@@ -83,7 +106,7 @@ export default function AdminPage() {
       </div>
 
       {/* Toast Notification */}
-      <div id="toast" style={{ display: admin.toastMsg ? 'block' : 'none' }}>
+      <div id="toast" className={admin.toastMsg ? 'show' : ''}>
         {admin.toastMsg}
       </div>
     </AdminLayout>

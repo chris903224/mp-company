@@ -15,3 +15,61 @@
 @import './styles/footer.css';
 @import './styles/back-to-top.css';
 @import './styles/responsive.css';
+@import './styles/mobile.css';
+@import './styles/admin-login.css';
+
+
+/* ═══════════ BUTTON HOVER: precise, light + dark ═══════════
+   PASTE AT THE VERY END of your last stylesheet (mobile.css).
+
+   Why the text vanished: background and text colour faded toward each
+   other at the same speed, so halfway through both were the same grey.
+   Now background/border fade linearly and the text colour flips exactly
+   at the halfway point (the .12s delay), so it is never invisible. */
+
+:root :is(.btn,.q,.ab-btn,.pg-step,.pg-close,.pg-filter,.menu .mq a){
+  transition:background-color .24s linear,border-color .24s linear,color 0s .12s,opacity .2s,transform .15s var(--ease);
+}
+:root #top{
+  transition:background-color .24s linear,border-color .24s linear,color 0s .12s,opacity .3s,visibility .3s,transform .35s var(--ease);
+}
+
+/* What each button turns into on hover / press.
+   Tokens swap automatically between light and dark themes. */
+:root .btn,
+:root .ab-btn,
+:root .q,
+:root .pg-step,
+:root .pg-close{--hv-bg:var(--ink);--hv-fg:var(--bg);--hv-bd:var(--ink)}
+
+:root .btn-p,
+:root .ab-btn--primary,
+:root header .menu .mq a{--hv-bg:transparent;--hv-fg:var(--ink);--hv-bd:var(--ink)}
+
+/* Over the always-dark hero photo */
+:root .seq .btn{--hv-bg:#fff;--hv-fg:#111;--hv-bd:#fff}
+:root .seq .btn-p{--hv-bg:transparent;--hv-fg:#fff;--hv-bd:#fff}
+
+/* Header "Get a Quote" while it sits on the hero photo */
+:root header.dk:not(.mo) .q{--hv-bg:#fff;--hv-fg:#111;--hv-bd:#fff}
+
+/* Mouse: real hover. Touch: only while pressed (no sticky hover). */
+@media (hover:hover) and (pointer:fine){
+  :root :is(.btn,.q,.ab-btn,.pg-step,.pg-close,.menu .mq a):not(:disabled):hover{
+    background-color:var(--hv-bg);
+    color:var(--hv-fg);
+    border-color:var(--hv-bd);
+  }
+  :root #top:hover{background-color:var(--ink);color:var(--bg);border-color:var(--ink)}
+}
+@media (hover:none){
+  :root :is(.btn,.q,.ab-btn,.pg-step,.pg-close,.menu .mq a):not(:disabled):active{
+    background-color:var(--hv-bg);
+    color:var(--hv-fg);
+    border-color:var(--hv-bd);
+  }
+  :root #top:active{background-color:var(--ink);color:var(--bg);border-color:var(--ink)}
+}
+
+/* Submit while "Sending..." */
+:root .btn:disabled{opacity:.55;cursor:not-allowed}

@@ -20,3 +20,25 @@ header.dk:not(.mo) .q:hover{background:#fff;color:#111;border-color:#fff}
 .burger i:first-child{top:18px}.burger i:last-child{top:26px}
 .burger[aria-expanded=true] i:first-child{top:22px;transform:rotate(45deg)}.burger[aria-expanded=true] i:last-child{top:22px;transform:rotate(-45deg)}
 .tg{width:44px;height:44px;display:grid;place-items:center;background:none;border:0;color:inherit;cursor:pointer}.tg:hover{opacity:.7}
+@media (max-width: 960px) {
+  .menu {
+    padding: 100px 24px 40px; /* May espasyo sa taas para sa close button */
+    align-items: flex-start;
+  }
+  
+  .menu a {
+    font-size: 2.2rem; /* Malaking text para madaling pindutin */
+    padding: 12px 0;
+    border-bottom: none;
+  }
+
+  .mq a {
+    font-size: 1rem;
+    padding: 16px 32px;
+    margin-top: 24px;
+  }
+
+  .burger {
+    z-index: 101; /* Siguraduhing nasa ibabaw ng menu */
+  }
+}

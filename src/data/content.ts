@@ -1,69 +1,92 @@
-import type { HeroStage, ProjectItem, ServiceItem, StepItem } from '../types';
 
-/* ---------- Business info ---------- */
-export const BUSINESS = {
-  phone: '+63 956 729 6257',
-  phoneHref: 'tel:+639567296257',
-  address: 'Donia Elena Tower, P. Sanchez St. corner 3rd St., Santa Mesa, Manila',
-  hours: 'Monday – Friday, 8:00 AM – 5:00 PM',
-  hoursShort: 'Mon – Fri, 8:00 AM – 5:00 PM',
-  emailPending: '[Official business email: to be confirmed]',
-  emailPendingShort: '[Email: to be confirmed]',
+import type { HeroStage, ServiceItem, StepItem } from '../types';
+
+/* ---------- Navigation ---------- */
+export const NAV_IDS = [
+  'about',
+  'services',
+  'walkthrough',
+  'process',
+  'contact',
+] as const;
+
+/* ---------- Business Information ---------- */
+export const BUSINESS_INFO = {
+  name: 'MP Micro IT Solutions',
+  address:
+    'Doña Elena Tower, P. Sanchez Street corner 3rd Street, Santa Mesa, Manila, Metro Manila, Philippines.',
+  location: 'Santa Mesa, Manila, Metro Manila',
+  tagline: 'Reliable IT Infrastructure. Smarter Business Operations.',
+  serviceArea:
+    'Serving businesses, offices, and property owners across different locations.',
 };
 
-/* ---------- Nav ---------- */
-export const NAV_IDS = ['about', 'services', 'walkthrough', 'process', 'contact'] as const;
+/* ---------- Mission & Vision ---------- */
+export const MISSION_VISION = [
+  {
+    id: 'mission',
+    title: 'Our Mission',
+    heading: 'Delivering Technology That Moves Businesses Forward.',
+    body: 'MP Micro IT Solutions is committed to providing reliable, innovative, and cost-effective IT solutions that help businesses and individuals improve connectivity, strengthen security, and enhance productivity. Through quality technical services, practical technology solutions, and customer-focused support, we aim to make technology more accessible and effective for every client.',
+  },
+  {
+    id: 'vision',
+    title: 'Our Vision',
+    heading: 'Building a More Connected and Technology-Driven Future.',
+    body: 'To become a trusted IT solutions provider recognized for excellence, integrity, and innovation. We envision empowering businesses and individuals through dependable technology, continuous improvement, and lasting partnerships that support their growth in an evolving digital world.',
+  },
+];
 
-/* ---------- Hero walkthrough ---------- */
+/* ---------- Hero Walkthrough ---------- */
 export const HERO_STAGES: HeroStage[] = [
   {
     name: 'Glass Entrance',
     img: 'cctv.jpg',
-    alt: 'Glass entrance of the office',
+    alt: 'Professional business entrance representing reliable IT services',
     width: 1920,
     height: 1080,
     fetchpriority: 'high',
-    tag: 'Santa Mesa, Manila.',
-    title: 'Reliable IT Solutions. Smarter Business Operations.',
-    body: 'Network cabling, CCTV and security systems, and IT hardware supply for businesses, offices, and residential properties.',
+    tag: 'IT Solutions for Businesses & Properties',
+    title: 'Reliable IT Infrastructure for Better Business Operations.',
+    body: 'From network cabling and CCTV installation to IT hardware supply, we deliver practical technology solutions that help businesses stay connected, equipped, and secure.',
     primaryCta: true,
   },
   {
     name: 'Reception and Main Hallway',
     img: 'router.jpg',
-    alt: 'Reception area and main hallway',
+    alt: 'Office networking equipment and connectivity infrastructure',
     width: 1920,
     height: 1080,
     fetchpriority: 'low',
-    eyebrow: 'Based in Santa Mesa',
-    title: 'IT Services & Hardware Solutions.',
-    body: 'Reliable network infrastructure, physical security systems, and essential IT equipment.',
+    eyebrow: 'Network Solutions',
+    title: 'Build a More Connected Workplace.',
+    body: 'Establish dependable office connectivity through LAN installation, router and switch configuration, and network infrastructure solutions.',
   },
   {
     name: 'Collaborative Workspace',
     img: 'cabling.jpg',
-    alt: 'Collaborative workspace',
+    alt: 'Structured network cabling and organized cable infrastructure',
     width: 1920,
     height: 1080,
     fetchpriority: 'low',
-    eyebrow: 'Infrastructure',
-    title: 'Structured Cabling & Connectivity.',
-    body: 'Structured cabling, LAN setup, and cable management.',
+    eyebrow: 'Network Infrastructure',
+    title: 'Organized Cabling. Reliable Connectivity.',
+    body: 'Structured cabling, network installation, and cable management designed to support your daily business operations and connectivity requirements.',
   },
   {
     name: 'Technical Lab',
     img: 'computer.jpg',
-    alt: 'Technical lab with network switches and a hardware workbench',
+    alt: 'IT hardware and surveillance equipment prepared for installation',
     width: 1920,
     height: 1080,
     fetchpriority: 'low',
-    eyebrow: 'Deployment',
-    title: 'Hardware & Security Systems.',
-    body: 'IT hardware supply and CCTV installation.',
+    eyebrow: 'Hardware & Security',
+    title: 'Technology and Security Solutions in One Place.',
+    body: 'Get essential IT equipment and CCTV systems to support workplace productivity, infrastructure, and property security.',
   },
 ];
 
-/* ---------- Hero product objects (transparent PNG/WebP) ---------- */
+/* ---------- Hero Floating Objects ---------- */
 export const HERO_OBJECT_IMAGES = [
   { src: 'object-01-cctv.png', alt: '' },
   { src: 'object-02-switch.png', alt: '' },
@@ -71,28 +94,31 @@ export const HERO_OBJECT_IMAGES = [
   { src: 'object-04-hardware.png', alt: '' },
 ];
 
-/* ---------- Ticker items ---------- */
+/* ---------- Service Ticker ---------- */
 export const TICKER_ITEMS = [
-  'Network Cabling',
+  'Network Infrastructure',
   'CCTV & Security Systems',
   'IT Hardware Supply',
-  'Santa Mesa, Manila',
+  'Business & Residential Solutions',
 ];
 
-/* ---------- About values ---------- */
+/* ---------- About / Company Values ---------- */
 export const VALUES = [
-  { title: 'Local Presence', body: 'Based in Santa Mesa, Manila.' },
   {
-    title: 'Practical IT Solutions',
-    body: 'Technology services focused on addressing real business and technical needs.',
+    title: 'Strategically Located',
+    body: 'Operating from Doña Elena Tower in Santa Mesa, Manila, with services available to businesses and clients across different locations.',
   },
   {
-    title: 'Integrated Services',
-    body: 'Network cabling, security systems, and IT hardware from one provider.',
+    title: 'Solutions Built Around Your Needs',
+    body: 'We consider your technical requirements, available resources, and operational goals when recommending suitable IT solutions.',
   },
   {
-    title: 'Customer-Focused Solutions',
-    body: 'Solutions designed around the specific requirements of each client.',
+    title: 'Connectivity & Security',
+    body: 'We provide essential technology services covering network infrastructure, surveillance systems, and IT equipment.',
+  },
+  {
+    title: 'Practical Technical Assistance',
+    body: 'We prioritize clear communication, appropriate technical implementation, and assistance throughout the service process.',
   },
 ];
 
@@ -102,103 +128,67 @@ export const SERVICES: ServiceItem[] = [
     id: 'network',
     title: 'Network Cabling & Infrastructure',
     bullets: [
-      'Structured cabling installation, termination, and layout design for offices and commercial spaces.',
-      'Local Area Network (LAN) setup, router/switch configuration, and network troubleshooting.',
-      'Cable management and connectivity optimization for stable internet and intranet performance.',
+      'Structured cabling installation, cable termination, and network layout planning for offices, commercial establishments, and other properties.',
+      'Local Area Network (LAN) installation, router and switch configuration, and network connectivity troubleshooting.',
+      'Cable organization and infrastructure improvement to support reliable connections and easier network maintenance.',
     ],
   },
   {
     id: 'hardware',
     title: 'IT Product Reselling & Hardware Supply',
     bullets: [
-      'Sourcing and supply of desktop computers, laptops, networking peripherals, and office IT equipment.',
-      'Provision of cabling materials, routers, switches, and surveillance accessories.',
-      'Consultation on hardware specifications tailored to your budget and operational requirements.',
+      'Sourcing and supply of desktop computers, laptops, networking equipment, peripherals, and essential office IT hardware.',
+      'Provision of network components, including routers, switches, structured cabling materials, and related accessories.',
+      'Hardware recommendations based on your intended use, technical requirements, and available budget.',
     ],
   },
   {
     id: 'cctv',
     title: 'CCTV & Security System Installation',
     bullets: [
-      'Supply and professional installation of indoor and outdoor surveillance camera systems.',
-      'DVR/NVR setup, hard drive configuration, and remote mobile/desktop viewing integration.',
-      'System maintenance, camera realignment, and troubleshooting of existing security setups.',
+      'Supply and installation of indoor and outdoor CCTV cameras for offices, commercial establishments, and residential properties.',
+      'DVR and NVR configuration, recording storage setup, and remote camera viewing through compatible mobile devices or computers.',
+      'CCTV maintenance, camera positioning adjustments, and troubleshooting of existing surveillance systems.',
     ],
   },
 ];
 
-export const SERVICE_IMAGES = ['image6.png', 'image7.png', 'image8.png'];
-
-/* ---------- Projects ---------- */
-export const PROJECTS: ProjectItem[] = [
-  {
-    img: 'cabling-01.jpg',
-    alt: 'Network rack',
-    captionTitle: 'Network rack',
-    captionBody: 'Patch panels with neatly dressed blue patch cabling.',
-  },
-  {
-    img: 'cabling-02.jpg',
-    alt: 'Cable run',
-    captionTitle: 'Cable run',
-    captionBody: 'Cabling laid out across the office floor before termination.',
-  },
-  {
-    img: 'cabling-03.jpg',
-    alt: 'Wall-mounted cabinet',
-    captionTitle: 'Wall-mounted cabinet',
-    captionBody: 'Patch panel and switch enclosure, mounted and wired.',
-  },
-  {
-    img: 'cabling-04.jpg',
-    alt: 'On-site installation',
-    captionTitle: 'On-site installation',
-    captionBody: 'Technicians pulling and terminating cable on location.',
-  },
-  {
-    img: 'cabling-05.jpg',
-    alt: 'Floor trunking outlet',
-    captionTitle: 'Floor trunking outlet',
-    captionBody: 'Labeled ports D17 and D18 on aluminum floor trunking.',
-  },
-  {
-    img: 'cabling-06.jpg',
-    alt: 'Window wall routing',
-    captionTitle: 'Window wall routing',
-    captionBody: 'Cable routed along the perimeter wall by the windows.',
-  },
-  {
-    img: 'cabling-07.jpg',
-    alt: 'Labeled wall outlets',
-    captionTitle: 'Labeled wall outlets',
-    captionBody: 'Ports D89 and D90, clearly marked for easy tracing.',
-  },
-  {
-    img: 'cabling-08.jpg',
-    alt: 'Outlet and cable drop',
-    captionTitle: 'Outlet and cable drop',
-    captionBody: 'Yellow patch cable on a surface-mounted outlet.',
-  },
-  {
-    img: 'cabling-09.jpg',
-    alt: 'Finished wall outlets',
-    captionTitle: 'Finished wall outlets',
-    captionBody: 'Network and power outlets installed flush on the wall.',
-  },
+/* ---------- Service Images ---------- */
+export const SERVICE_IMAGES = [
+  'image6.png',
+  'image7.png',
+  'image8.png',
 ];
 
-/* ---------- Process ---------- */
+/* ---------- Client Service Process ---------- */
 export const STEPS: StepItem[] = [
-  { num: '01', title: 'Initial Consultation', body: 'Understand the client’s technical requirements.' },
-  { num: '02', title: 'Assessment', body: 'Evaluate the equipment, infrastructure, or technical issue.' },
-  { num: '03', title: 'Implementation', body: 'Perform the agreed technical service or installation.' },
-  { num: '04', title: 'Technical Assistance', body: 'Provide appropriate post-service support.' },
+  {
+    num: '01',
+    title: 'Consultation & Requirements',
+    body: 'We discuss your project goals, technical concerns, preferred equipment, and the services you need to determine the right approach.',
+  },
+  {
+    num: '02',
+    title: 'Assessment & Planning',
+    body: 'We evaluate your existing setup or installation requirements and identify suitable equipment, materials, and technical solutions.',
+  },
+  {
+    num: '03',
+    title: 'Installation & Implementation',
+    body: 'We carry out the agreed installation, equipment setup, configuration, or technical service based on the approved requirements.',
+  },
+  {
+    num: '04',
+    title: 'Testing & Technical Assistance',
+    body: 'We check the functionality of the implemented solution and provide appropriate technical assistance for post-service concerns.',
+  },
 ];
 
-/* ---------- Contact form service options ---------- */
+/* ---------- Contact Service Options ---------- */
 export const SERVICE_OPTIONS = [
   'Network Cabling & Infrastructure',
   'IT Product Reselling & Hardware Supply',
   'CCTV & Security System Installation',
+  'Multiple IT Services',
   'Other / Not sure yet',
 ];

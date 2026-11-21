@@ -6,16 +6,16 @@ import StageDetail from './StageDetail';
 
 interface HeroProps {
   ref?: Ref<HTMLElement>;
+  serviceCount?: number; // ✅ Idinagdag
+  clientCount?: number;  // ✅ Idinagdag
 }
 
-export default function Hero({ ref }: HeroProps) {
+export default function Hero({ ref, serviceCount = 3, clientCount = 3 }: HeroProps) {
   const sectionRef = useRef<HTMLElement | null>(null);
   const pinRef = useRef<HTMLDivElement | null>(null);
   const zmRefs = useRef<Array<HTMLDivElement | null>>([]);
   const hlRefs = useRef<Array<HTMLDivElement | null>>([]);
   const objRef = useRef<HTMLDivElement | null>(null);
-
-  // Blank ref para sa planRef na tinanggal na natin (para walang error)
   const planRef = useRef<SVGSVGElement | null>(null);
 
   useImperativeHandle(ref, () => sectionRef.current as HTMLElement, []);
@@ -40,12 +40,7 @@ export default function Hero({ ref }: HeroProps) {
       <div className="pin" ref={pinRef}>
         {HERO_STAGES.map((stage, i) => (
           <article key={stage.name} className="stg" data-name={stage.name}>
-            <div
-              className="zm"
-              ref={(el) => {
-                zmRefs.current[i] = el;
-              }}
-            >
+            <div className="zm" ref={(el) => { zmRefs.current[i] = el; }}>
               <img
                 src={stage.img}
                 alt={stage.alt}
@@ -53,31 +48,21 @@ export default function Hero({ ref }: HeroProps) {
                 height={stage.height}
                 decoding="async"
                 fetchPriority={stage.fetchpriority}
-                onError={(e) => {
-                  (e.currentTarget as HTMLImageElement).style.visibility = 'hidden';
-                }}
+                onError={(e) => { (e.currentTarget as HTMLImageElement).style.visibility = 'hidden'; }}
               />
             </div>
 
-            <div
-              className="hl"
-              ref={(el) => {
-                hlRefs.current[i] = el;
-              }}
-            >
+            <div className="hl" ref={(el) => { hlRefs.current[i] = el; }}>
               {i === 0 ? (
                 <div className="wrap stx">
                   <div className="hc">
                     <h1 className="a">{stage.title}</h1>
                     <p className="a">{stage.body}</p>
-                    <StageDetail index={i} compact />
+                    {/* ✅ IPINASA NATIN YUNG COUNTS */}
+                    <StageDetail index={i} compact serviceCount={serviceCount} clientCount={clientCount} />
                     <div className="cta a">
-                      <a className="btn btn-p" href="#services" tabIndex={ctaTabIndex}>
-                        Explore Our Services
-                      </a>
-                      <a className="btn" href="#contact" tabIndex={ctaTabIndex}>
-                        Request a Quote
-                      </a>
+                      <a className="btn btn-p" href="#services" tabIndex={ctaTabIndex}>Explore Our Services</a>
+                      <a className="btn" href="#contact" tabIndex={ctaTabIndex}>Request a Quote</a>
                     </div>
                   </div>
                 </div>
@@ -109,7 +94,6 @@ export default function Hero({ ref }: HeroProps) {
           ))}
         </nav>
 
-        {/* Ibinalik natin si HeroObject para lumabas ang mga transparent images */}
         <HeroObject containerRef={objRef} isLive={isLive} />
       </div>
     </section>

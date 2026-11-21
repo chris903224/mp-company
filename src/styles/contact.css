@@ -18,3 +18,55 @@ input:focus-visible,select:focus-visible,textarea:focus-visible{outline:2px soli
 .demo{grid-column:1/-1;margin:0;font-size:.85rem;color:var(--mu);border:1px dashed var(--fld);padding:10px 12px}
 .msg{grid-column:1/-1;padding:12px 14px;font-size:.92rem;border:1px solid}.msg:empty{display:none}
 .msg.ok{border-color:var(--ok);color:var(--ok)}.msg.no{border-color:var(--err);color:var(--err)}
+@media (max-width: 960px) {
+  .cg { grid-template-columns: 1fr; gap: 40px; }
+  form { padding: 24px; }
+}
+@media (max-width: 600px) {
+  form { grid-template-columns: 1fr; } /* Isang column lang ang inputs */
+  .info li { grid-template-columns: 1fr; gap: 4px; padding: 16px 0; }
+}
+/* ═══════════════════════════════════════════════════════════
+   OVERRIDES — Contact Form Button Fix (Light & Dark Mode)
+   ═══════════════════════════════════════════════════════════ */
+
+/* 1. Siguraduhing visible ang default state ng submit button */
+form .btn-p {
+  background: var(--ink) !important;
+  color: var(--bg) !important;
+  border: 1px solid var(--ink) !important;
+  transition: all 0.3s ease !important;
+}
+
+/* 2. Hover state para sa desktop */
+@media (hover: hover) {
+  form .btn-p:hover {
+    background: transparent !important;
+    color: var(--ink) !important;
+    border-color: var(--ink) !important;
+  }
+  
+  /* Dark mode specific hover fix */
+  :root[data-theme="dark"] form .btn-p:hover {
+    background: transparent !important;
+    color: #fff !important;
+    border-color: #fff !important;
+  }
+}
+
+/* 3. Ayusin din ang focus state para sa accessibility */
+form .btn-p:focus-visible {
+  outline: 2px solid var(--ink) !important;
+  outline-offset: 3px !important;
+}
+
+/* 4. Ensure na visible ang text sa dark mode default state */
+:root[data-theme="dark"] form .btn-p {
+  background: #fff !important;
+  color: #111 !important;
+}
+
+:root[data-theme="dark"] form .btn-p:hover {
+  background: transparent !important;
+  color: #fff !important;
+}

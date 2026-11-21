@@ -292,3 +292,67 @@
   .a{animation:none}
   .sqn i{transition:none}
 }
+@media (max-width: 960px) {
+  /* 1. Alisin ang sticky/pinned effect - gagawing normal vertical scroll */
+  .live { height: auto; }
+  .live .pin { position: relative; height: auto; overflow: visible; }
+  
+  /* 2. Gawing normal blocks ang mga stages */
+  .live .stg { 
+    position: relative; 
+    min-height: 100svh; /* Full screen pa rin per stage */
+    padding: 100px 0 60px; 
+    pointer-events: auto; 
+  }
+  
+  /* 3. Ipakita lahat ng text at images (alisin ang JS-driven opacity/transform) */
+  .live .hl { 
+    position: relative; 
+    opacity: 1 !important; 
+    transform: none !important; 
+  }
+  .live .stx { position: relative; bottom: auto; }
+  
+  /* 4. Itago ang mga side navigation dots at 3D objects */
+  .live .sqn { display: none; }
+  .live .obj, .live .plan { display: none !important; }
+  
+  /* 5. Ayusin ang typography para sa mobile */
+  .hc h1, .hc h2 { font-size: clamp(2rem, 8vw, 3rem); max-width: 100%; }
+  .hc p { font-size: 1rem; }
+  
+  /* 6. Gawing 1 column ang details */
+  .hd-points { grid-template-columns: 1fr; }
+}
+/* ═══════════════════════════════════════════════════════════
+   OVERRIDES — Hero Button Fix (Light & Dark Mode)
+   ═══════════════════════════════════════════════════════════ */
+
+/* 1. Default state para sa lahat ng buttons sa loob ng hero */
+.seq .btn {
+  border: 1px solid #fff !important;
+  color: #fff !important;
+  background: transparent !important;
+  transition: all 0.3s ease !important;
+}
+
+/* 2. Primary button (Explore Our Services) - Default */
+.seq .btn-p {
+  background: #fff !important;
+  color: #111 !important;
+}
+
+/* 3. Hover states para sa Desktop */
+@media (hover: hover) {
+  /* Kapag hinover ang outline button (Request a Quote) */
+  .seq .btn:hover {
+    background: #fff !important;
+    color: #111 !important;
+  }
+
+  /* Kapag hinover ang primary button (Explore Our Services) */
+  .seq .btn-p:hover {
+    background: transparent !important;
+    color: #fff !important;
+  }
+}

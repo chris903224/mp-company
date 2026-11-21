@@ -12,17 +12,23 @@ import Footer from '../components/Footer';
 import BackToTop from '../components/BackToTop';
 import { useTheme } from '../hooks/useTheme';
 import { useHeaderState } from '../hooks/useHeaderState';
+import { useSiteData } from '../hooks/useSiteData';
+import { SERVICES_LIST } from '../admin/adminData';
 
 export default function HomePage() {
   const { theme, toggle } = useTheme();
+  
+  // Kinukuha natin lahat ng dynamic data, kasama na ang services
+  const { projects, business, services, isLoading } = useSiteData();
+
+  // Dynamic counts
+  const serviceCount = SERVICES_LIST.length; 
+  const uniqueClients = new Set(projects.map((p: any) => p.company?.trim()).filter(Boolean)).size;
 
   const [menuOpen, setMenuOpen] = useState(false);
   const [preferredService, setPreferredService] = useState<string | null>(null);
   const heroRef = useRef<HTMLElement | null>(null);
 
-  // `heroRef.current` is read once Header first mounts. It's the same DOM
-  // node throughout the page's lifetime, so a single read is fine and
-  // matches the original vanilla `$(".seq")` lookup.
   const { showTop } = useHeaderState(heroRef.current);
 
   const handleRequestService = useCallback((service: string) => {
@@ -41,15 +47,23 @@ export default function HomePage() {
         heroRef={heroRef}
       />
       <main id="main">
-        <Hero ref={heroRef} />
+        <Hero 
+          ref={heroRef} 
+          serviceCount={serviceCount} 
+          clientCount={uniqueClients > 0 ? uniqueClients : 3} 
+        />
         <Ticker />
         <About />
-        <Services onRequestService={handleRequestService} />
-        <Projects />
+        
+        {/* ✅ Ipapasa natin ang services data */}
+        <Services onRequestService={handleRequestService} servicesData={services} />
+        
+        <Projects projects={projects} isLoading={isLoading} />
         <Process />
-        <Contact preferredService={preferredService} />
+        <Contact preferredService={preferredService} business={business} />
       </main>
-      <Footer />
+      
+      <Footer business={business} />
       <BackToTop show={showTop} />
     </>
   );

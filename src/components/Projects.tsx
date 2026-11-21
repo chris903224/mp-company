@@ -1,31 +1,15 @@
 import { useEffect, useMemo, useRef, useState } from 'react';
 import type { SyntheticEvent } from 'react';
-import { PROJECTS } from '../data/content';
 import { useReveal } from '../hooks/useReveal';
+import type { ProjectItem } from '../types'; // Gagamit tayo ng generic na type
 
 /* ───────── Data ───────── */
 
-// Display order. A project's own `category` wins; otherwise it is guessed from its text.
 const CATEGORIES = [
   { id: 'network', label: 'Network Infrastructure', match: /cabl|network|\blan\b|fib(er|re)|rack|patch|switch|wi-?fi|router|terminat|conduit/i },
   { id: 'hardware', label: 'IT Hardware', match: /hardware|computer|laptop|desktop|\bpc\b|printer|monitor|workstation/i },
   { id: 'security', label: 'CCTV & Security', match: /cctv|camera|surveillance|security|access control|alarm|\bdvr\b|\bnvr\b/i },
 ];
-
-const ITEMS = PROJECTS.map((p, index) => {
-  const declared = ((p as { category?: string }).category ?? '').trim().toLowerCase();
-  const text = `${p.alt} ${p.captionTitle} ${p.captionBody}`;
-  const category =
-    CATEGORIES.find((c) => c.id === declared || c.label.toLowerCase() === declared) ??
-    [...CATEGORIES].reverse().find((c) => c.match.test(text)) ?? // most specific first
-    CATEGORIES[0];
-  return { index, img: p.img, alt: p.alt, title: p.captionTitle, body: p.captionBody, category };
-});
-
-type Item = (typeof ITEMS)[number];
-
-// Only offer filters that have projects. With a single category, no filter bar at all.
-const TABS = [{ id: 'all', label: 'All' }, ...CATEGORIES.filter((c) => ITEMS.some((i) => i.category.id === c.id))];
 
 const ICONS = {
   prev: 'M19 12H5M11 6l-6 6 6 6',
@@ -45,13 +29,13 @@ const hideBroken = (e: SyntheticEvent<HTMLImageElement>) => {
 
 /* ───────── Card ───────── */
 
-function Card({ item, onOpen }: { item: Item; onOpen: (index: number) => void }) {
+function Card({ item, onOpen }: { item: any; onOpen: (index: number) => void }) {
   const ref = useReveal<HTMLElement>();
   return (
     <figure ref={ref} className="fd pg-item">
       <button type="button" className="pg-card" onClick={() => onOpen(item.index)}>
         <span className="pg-media">
-          <img src={item.img} alt="" loading="lazy" decoding="async" onError={hideBroken} />
+          <img src={item.img} alt={item.alt} loading="lazy" decoding="async" onError={hideBroken} />
         </span>
         <span className="pg-cap">
           <span className="pg-cat">{item.category.label}</span>
@@ -65,19 +49,52 @@ function Card({ item, onOpen }: { item: Item; onOpen: (index: number) => void })
 
 /* ───────── Page ───────── */
 
-export default function Projects() {
+interface ProjectsProps {
+  projects: ProjectItem[];
+  isLoading: boolean;
+}
+
+export default function Projects({ projects, isLoading }: ProjectsProps) {
   const [filter, setFilter] = useState('all');
   const [open, setOpen] = useState<number | null>(null);
   const dialogRef = useRef<HTMLDialogElement | null>(null);
 
+  // 1. I-transform yung dynamic data (galing Supabase) papunta sa format ng component
+  const ITEMS = useMemo(() => {
+    return projects.map((p, index) => {
+      const declared = ((p as { category?: string }).category ?? '').trim().toLowerCase();
+      const text = `${p.alt} ${p.captionTitle} ${p.captionBody}`;
+      const category =
+        CATEGORIES.find((c) => c.id === declared || c.label.toLowerCase() === declared) ??
+        [...CATEGORIES].reverse().find((c) => c.match.test(text)) ??
+        CATEGORIES[0];
+        
+      return { 
+        index, 
+        img: p.img, 
+        alt: p.alt, 
+        title: p.captionTitle, 
+        body: p.captionBody, 
+        category 
+      };
+    });
+  }, [projects]);
+
+  // 2. I-generate yung TABS base sa kung anong category meron yung data
+  const TABS = useMemo(() => {
+    return [
+      { id: 'all', label: 'All' }, 
+      ...CATEGORIES.filter((c) => ITEMS.some((i) => i.category.id === c.id))
+    ];
+  }, [ITEMS]);
+
   const visible = useMemo(
     () => (filter === 'all' ? ITEMS : ITEMS.filter((i) => i.category.id === filter)),
-    [filter],
+    [filter, ITEMS],
   );
   const current = open === null ? null : ITEMS[open];
   const pos = current ? visible.findIndex((i) => i.index === current.index) : -1;
 
-  // Open as a native modal and lock page scroll while it is showing.
   useEffect(() => {
     const dialog = dialogRef.current;
     if (open === null || !dialog) return undefined;
@@ -91,6 +108,20 @@ export default function Projects() {
   const step = (dir: 1 | -1) => {
     if (visible.length > 1) setOpen(visible[(pos + dir + visible.length) % visible.length].index);
   };
+
+  // Loading state habang kinukuha sa Supabase
+  if (isLoading) {
+    return (
+      <section className="pg" id="portfolio">
+        <div className="wrap" style={{ textAlign: 'center', padding: '4rem 0', color: 'var(--mut)' }}>
+          Loading portfolio...
+        </div>
+      </section>
+    );
+  }
+
+  // Kapag walang projects na nakuha
+  if (ITEMS.length === 0) return null;
 
   return (
     <>
@@ -129,7 +160,7 @@ export default function Projects() {
 
           <div className="pg-grid" key={filter}>
             {visible.map((item) => (
-              <Card key={item.img} item={item} onOpen={setOpen} />
+              <Card key={item.img + item.index} item={item} onOpen={setOpen} />
             ))}
           </div>
         </div>

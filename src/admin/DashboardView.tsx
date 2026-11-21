@@ -24,24 +24,81 @@ export default function DashboardView({ admin }: { admin: AdminState }) {
 
     const tip = { backgroundColor: ink, titleColor: on, bodyColor: on, cornerRadius: 12, padding: 10, displayColors: false };
 
+    // --- 1. DYNAMIC CALCULATIONS PARA SA GRAPHS ---
+
+    // Para sa Line Chart (Inquiries vs completed) - I-group natin per month (base sa 'date' text mo)
+    const monthLabels = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
+    const inquiriesPerMonth = new Array(12).fill(0);
+    const completedPerMonth = new Array(12).fill(0);
+
+    admin.inquiries.forEach(inq => {
+      // Assuming format ng date mo ay "Nov 18" or "Nov 18, 2023"
+      const monthStr = inq.date.split(' ')[0]; 
+      const monthIdx = monthLabels.indexOf(monthStr);
+      if (monthIdx !== -1) {
+        inquiriesPerMonth[monthIdx]++;
+        if (inq.stage === 3) { // Assuming stage 3 ay "Technical Assistance" (Completed)
+          completedPerMonth[monthIdx]++;
+        }
+      }
+    });
+
+    // Slice natin para lang sa mga recent months (e.g., last 8 months) para hindi siksikan
+    const recentMonths = monthLabels.slice(3, 11); // Apr to Nov (base sa design mo)
+    const recentInquiries = inquiriesPerMonth.slice(3, 11);
+    const recentCompleted = completedPerMonth.slice(3, 11);
+
     const c1 = new Chart(c1Ref.current!, {
       type: 'line',
       data: {
-        labels: ['Apr','May','Jun','Jul','Aug','Sep','Oct','Nov'],
+        labels: recentMonths,
         datasets: [
-          { label: 'Inquiries', data: [18,24,22,31,36,33,42,47], borderColor: ink, tension: .4, borderWidth: 2.5, pointRadius: 0, fill: true, backgroundColor: (ctx) => { const g = ctx.chart.ctx.createLinearGradient(0, 0, 0, 150); g.addColorStop(0, isDark ? 'rgba(255,255,255,.22)' : 'rgba(0,0,0,.15)'); g.addColorStop(1, 'rgba(128,128,128,0)'); return g; } },
-          { label: 'Done', data: [9,13,15,18,22,24,29,34], borderColor: mut, borderDash: [5, 5], tension: .4, borderWidth: 2.5, pointRadius: 0 }
+          { 
+            label: 'Inquiries', 
+            data: recentInquiries, 
+            borderColor: ink, 
+            tension: .4, 
+            borderWidth: 2.5, 
+            pointRadius: 0, 
+            fill: true, 
+            backgroundColor: (ctx) => { const g = ctx.chart.ctx.createLinearGradient(0, 0, 0, 150); g.addColorStop(0, isDark ? 'rgba(255,255,255,.22)' : 'rgba(0,0,0,.15)'); g.addColorStop(1, 'rgba(128,128,128,0)'); return g; } 
+          },
+          { 
+            label: 'Done', 
+            data: recentCompleted, 
+            borderColor: mut, 
+            borderDash: [5, 5], 
+            tension: .4, 
+            borderWidth: 2.5, 
+            pointRadius: 0 
+          }
         ]
       },
-      options: { maintainAspectRatio: false, interaction: { mode: 'index', intersect: false }, plugins: { legend: { display: false }, tooltip: tip }, scales: { x: { grid: { display: false }, border: { display: false } }, y: { grid: { color: grid }, border: { display: false }, ticks: { maxTicksLimit: 4 } } } }
+      options: { maintainAspectRatio: false, interaction: { mode: 'index', intersect: false }, plugins: { legend: { display: false }, tooltip: tip }, scales: { x: { grid: { display: false }, border: { display: false } }, y: { grid: { color: grid }, border: { display: false }, ticks: { maxTicksLimit: 4, stepSize: 1 } } } }
     });
+
+    // Para sa Doughnut Chart (Service Categories) - Bilangin kung ilan per service
+    const serviceCounts = SERVICES_LIST.map((_, index) => 
+      admin.inquiries.filter(inq => inq.serviceindex === index).length
+    );
 
     const c2 = new Chart(c2Ref.current!, {
       type: 'doughnut',
-      data: { labels: SERVICES_LIST, datasets: [{ data: [38,24,22,16], backgroundColor: dn, borderWidth: 0, spacing: 3, borderRadius: 8, hoverOffset: 6 }] },
+      data: { 
+        labels: SERVICES_LIST, 
+        datasets: [{ 
+          data: serviceCounts, // <--- DYNAMIC NA
+          backgroundColor: dn, 
+          borderWidth: 0, 
+          spacing: 3, 
+          borderRadius: 8, 
+          hoverOffset: 6 
+        }] 
+      },
       options: { maintainAspectRatio: false, cutout: '72%', plugins: { legend: { position: 'bottom', labels: { usePointStyle: true, boxWidth: 7, padding: 9, font: { size: 9 }, color: mut } }, tooltip: tip } }
     });
 
+    // Para sa Bar Chart (Process pipeline) - Bilangin per stage
     const barData = STAGES.map((_, i) => admin.inquiries.filter(x => x.stage === i).length);
     const maxIdx = barData.indexOf(Math.max(...barData));
     const c3 = new Chart(c3Ref.current!, {
@@ -50,16 +107,24 @@ export default function DashboardView({ admin }: { admin: AdminState }) {
       options: { maintainAspectRatio: false, plugins: { legend: { display: false }, tooltip: tip }, scales: { x: { grid: { display: false }, border: { display: false }, ticks: { color: mut } }, y: { grid: { color: grid }, border: { display: false }, ticks: { color: mut, precision: 0, maxTicksLimit: 5 } } } }
     });
 
+    // Helper para sa Sparklines
     const spark = (ref: any, data: number[], color: string) => new Chart(ref.current!, {
       type: 'line',
       data: { labels: data.map((_, i) => i), datasets: [{ data, borderColor: color, borderWidth: 2, tension: .45, pointRadius: 0 }] },
       options: { events: [], plugins: { legend: { display: false }, tooltip: { enabled: false } }, scales: { x: { display: false }, y: { display: false } } }
     });
 
-    const sp0 = spark(sp0Ref, [3,5,4,7,6,9,8,11], on);
-    const sp1 = spark(sp1Ref, [2,3,3,4,6,5,7,7], ink);
-    const sp2 = spark(sp2Ref, [9,13,15,18,22,24,29,34], ink);
-    const sp3 = spark(sp3Ref, [5,4.6,4.2,3.9,3.4,3.1,2.8,2.4], ink);
+    // --- 2. DYNAMIC SPARKLINES ---
+    // Gumawa tayo ng maliit na trend based sa recentInquiries at recentCompleted
+    const sp0Data = recentInquiries.length ? recentInquiries : [0,0,0,0]; // Client inquiries
+    const sp1Data = STAGES.map((_, i) => admin.inquiries.filter(x => x.stage === i).length); // Active projects trend (per stage)
+    const sp2Data = recentCompleted.length ? recentCompleted : [0,0,0,0]; // Completed projects
+    const sp3Data = [2.4, 2.2, 2.5, 2.1, 2.3, 2.0, 2.2, 2.4]; // Avg reply (Hard to compute without timestamps, keep as is or mock trend)
+
+    const sp0 = spark(sp0Ref, sp0Data, on);
+    const sp1 = spark(sp1Ref, sp1Data, ink);
+    const sp2 = spark(sp2Ref, sp2Data, ink);
+    const sp3 = spark(sp3Ref, sp3Data, ink);
 
     return () => [c1, c2, c3, sp0, sp1, sp2, sp3].forEach(c => c.destroy());
   }, [admin.theme, admin.inquiries]);
@@ -78,7 +143,7 @@ export default function DashboardView({ admin }: { admin: AdminState }) {
           <div className="big">{admin.inquiries.length}</div>
           <div className="cv" style={{ maxHeight: '4.3rem' }}><canvas ref={sp0Ref}></canvas></div>
           <div style={{ display: 'flex', justifyContent: 'space-between', opacity: .55, fontSize: '.85rem' }}>
-            <span>Santa Mesa, Manila</span><span>Nov 2026</span>
+            <span>Santa Mesa, Manila</span><span>{new Date().toLocaleDateString('en-US', { month: 'short', year: 'numeric' })}</span>
           </div>
         </div>
         
@@ -88,7 +153,7 @@ export default function DashboardView({ admin }: { admin: AdminState }) {
             <div className="spw"><canvas ref={sp1Ref}></canvas></div>
           </div>
           <div className="kr">
-            <div><div className="mut">Completed projects</div><div className="kv">{34 + admin.inquiries.filter(i => i.stage === 3).length}</div></div>
+            <div><div className="mut">Completed projects</div><div className="kv">{admin.inquiries.filter(i => i.stage === 3).length}</div></div>
             <div className="spw"><canvas ref={sp2Ref}></canvas></div>
           </div>
           <div className="kr">
@@ -152,7 +217,7 @@ export default function DashboardView({ admin }: { admin: AdminState }) {
                       <div><div style={{ fontWeight: 600 }}>{inq.name}</div><div className="mut">{inq.company}</div></div>
                     </div>
                   </td>
-                  <td>{SERVICES_LIST[inq.serviceIndex]}</td>
+                  <td>{SERVICES_LIST[inq.serviceindex]}</td>
                   <td>{inq.date}</td>
                   <td><span className="dot" style={{ opacity: [.3, .55, .8, 1][inq.stage] }}></span>{STAGES[inq.stage]}</td>
                   <td className="mut">{inq.email}</td>

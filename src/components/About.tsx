@@ -1,36 +1,57 @@
+
 import type { ElementType, ReactNode } from 'react';
 import { useReveal } from '../hooks/useReveal';
-import { VALUES } from '../data/content';
+import {
+  BUSINESS_INFO,
+  MISSION_VISION,
+  VALUES,
+} from '../data/content';
 
-/* ───────── Copy and links: edit here, not in the JSX ───────── */
+/* ---------- Copy and Links ---------- */
 
 const CONTACT_HREF = '/#contact';
-const MAP_HREF = 'https://maps.app.goo.gl/FMQM6CuwvztCVcep6';
 
-const PILLARS = [
-  {
-    label: 'Mission',
-    body: 'Dependable network, security and IT hardware solutions that keep businesses, offices and homes connected and protected.',
-  },
-  {
-    label: 'Vision',
-    body: 'To be the trusted local partner for practical, well-installed technology that works day after day.',
-  },
-];
+const MAP_HREF =
+  'https://maps.app.goo.gl/FMQM6CuwvztCVcep6';
+
+/* ---------- Company Expertise ---------- */
 
 const EXPERTISE = [
-  { title: 'Network Infrastructure', body: 'Structured cabling, routers, switches and Wi-Fi, set up for stable connectivity.' },
-  { title: 'Security Systems', body: 'CCTV and surveillance installed and configured to protect your premises.' },
-  { title: 'IT Equipment', body: 'Computers, peripherals and networking hardware for offices and homes.' },
-  { title: 'Installation & Setup', body: 'Every system tested and ready to use from day one.' },
+  {
+    title: 'Network Infrastructure',
+    body: 'Structured cabling installation, cable termination, LAN configuration, routers, switches, and connectivity solutions designed to support reliable network performance.',
+  },
+  {
+    title: 'CCTV & Security Systems',
+    body: 'Supply, installation, and configuration of indoor and outdoor surveillance systems to help businesses and property owners monitor and protect their premises.',
+  },
+  {
+    title: 'IT Equipment & Hardware',
+    body: 'Sourcing and supply of desktop computers, laptops, peripherals, networking devices, and essential technology equipment for different operational needs.',
+  },
+  {
+    title: 'Installation & Technical Setup',
+    body: 'Equipment installation, system configuration, connectivity testing, and technical implementation based on each client’s requirements.',
+  },
 ];
 
-/* ───────── Helpers ───────── */
+/* ---------- Helpers ---------- */
 
-type RevealProps = { as?: ElementType; className?: string; delay?: number; children: ReactNode };
+type RevealProps = {
+  as?: ElementType;
+  className?: string;
+  delay?: number;
+  children: ReactNode;
+};
 
-function Reveal({ as: Tag = 'div', className = '', delay = 0, children }: RevealProps) {
+function Reveal({
+  as: Tag = 'div',
+  className = '',
+  delay = 0,
+  children,
+}: RevealProps) {
   const ref = useReveal<HTMLElement>();
+
   return (
     <Tag
       ref={ref}
@@ -42,34 +63,69 @@ function Reveal({ as: Tag = 'div', className = '', delay = 0, children }: Reveal
   );
 }
 
-/** Heading on the left, content on the right. */
-function Section({ id, title, children }: { id: string; title: string; children: ReactNode }) {
+/* ---------- Split Section Helper ---------- */
+
+function Section({
+  id,
+  title,
+  children,
+}: {
+  id: string;
+  title: string;
+  children: ReactNode;
+}) {
   return (
-    <section className="ab-sec ab-split" aria-labelledby={id}>
+    <section
+      className="ab-sec ab-split"
+      aria-labelledby={id}
+    >
       <Reveal>
         <h2 id={id}>{title}</h2>
       </Reveal>
+
       <div>{children}</div>
     </section>
   );
 }
 
-/* ───────── Page ───────── */
+/* ---------- About Page ---------- */
 
 export default function About() {
   return (
     <section className="ab" id="about">
       <div className="wrap">
+
+        {/* =================================
+            INTRODUCTION
+        ================================= */}
+
         <div className="ab-intro">
-          <h2>Technology solutions built around your needs.</h2>
-          <p className="lead">
-            MP Micro IT Solutions is an IT services and hardware provider in Santa Mesa, Manila. We
-            set up reliable networks and security systems, and supply the equipment that keeps
-            offices and homes running.
-          </p>
+          <Reveal>
+            <span className="ab-eyebrow">
+              ABOUT {BUSINESS_INFO.name.toUpperCase()}
+            </span>
+
+            <h2>
+              Technology solutions built around your needs.
+            </h2>
+
+            <p className="lead">
+              {BUSINESS_INFO.name} is an IT solutions and
+              hardware provider committed to helping businesses
+              and individuals meet their technology needs.
+              We specialize in network infrastructure, CCTV
+              and security systems, and IT hardware supply,
+              delivering practical solutions that support
+              connectivity, security, and productivity.
+            </p>
+          </Reveal>
         </div>
 
-        <div className="ab-photo">
+        {/* =================================
+            COMPANY IMAGE
+        ================================= */}
+
+        <Reveal className="ab-photo">
           <img
             src="image.png"
             alt="MP Micro IT Solutions at work"
@@ -79,53 +135,153 @@ export default function About() {
               e.currentTarget.style.visibility = 'hidden';
             }}
           />
-        </div>
+        </Reveal>
 
-        <section className="ab-sec ab-pillars" aria-label="Mission and vision">
-          {PILLARS.map((p, i) => (
-            <Reveal key={p.label} delay={i * 100}>
-              <h3>{p.label}</h3>
-              <p>{p.body}</p>
+        {/* =================================
+            MISSION & VISION
+        ================================= */}
+
+        <section
+          className="ab-sec ab-pillars"
+          aria-label="Company mission and vision"
+        >
+          {MISSION_VISION.map((item, i) => (
+            <Reveal
+              key={item.id}
+              delay={i * 100}
+            >
+              <span className="ab-eyebrow">
+                {item.title}
+              </span>
+
+              <h3>{item.heading}</h3>
+
+              <p>{item.body}</p>
             </Reveal>
           ))}
         </section>
 
-        <Section id="ab-do" title="What we do">
+        {/* =================================
+            COMPANY EXPERTISE
+        ================================= */}
+
+        <Section
+          id="ab-do"
+          title="What we do"
+        >
           <ul className="ab-list">
             {EXPERTISE.map((item, i) => (
-              <Reveal as="li" key={item.title} delay={i * 70}>
+              <Reveal
+                as="li"
+                key={item.title}
+                delay={i * 70}
+              >
                 <h3>{item.title}</h3>
+
                 <p>{item.body}</p>
               </Reveal>
             ))}
           </ul>
         </Section>
 
-        <Section id="ab-why" title="Why clients choose us">
+        {/* =================================
+            COMPANY VALUES
+        ================================= */}
+
+        <Section
+          id="ab-why"
+          title="What sets us apart"
+        >
           <ul className="ab-vals">
-            {VALUES.map((v, i) => (
-              <Reveal as="li" key={v.title} delay={i * 70}>
-                <b>{v.title}</b>
-                <span>{v.body}</span>
+            {VALUES.map((value, i) => (
+              <Reveal
+                as="li"
+                key={value.title}
+                delay={i * 70}
+              >
+                <b>{value.title}</b>
+
+                <span>{value.body}</span>
               </Reveal>
             ))}
           </ul>
         </Section>
 
+        {/* =================================
+            BUSINESS LOCATION
+        ================================= */}
+
+        <Section
+          id="ab-location"
+          title="Visit our office"
+        >
+          <Reveal>
+            <h3>{BUSINESS_INFO.name}</h3>
+
+            <p>
+              {BUSINESS_INFO.address}
+            </p>
+
+            <p>
+              Our office is located in Santa Mesa, Manila.
+              Contact us to discuss your project, service
+              requirements, or IT equipment needs.
+            </p>
+
+            <div className="ab-actions">
+              <a
+                className="ab-btn"
+                href={MAP_HREF}
+                target="_blank"
+                rel="noopener noreferrer"
+              >
+                View our location
+              </a>
+            </div>
+          </Reveal>
+        </Section>
+
+        {/* =================================
+            CALL TO ACTION
+        ================================= */}
+
         <Reveal className="ab-sec ab-cta">
           <div>
-            <h2>Let&rsquo;s plan your next setup.</h2>
-            <p>Tell us what your office, property or equipment needs and we&rsquo;ll recommend the right solution.</p>
+            <span className="ab-eyebrow">
+              LET'S WORK TOGETHER
+            </span>
+
+            <h2>
+              Let's build a better technology setup.
+            </h2>
+
+            <p>
+              Tell us about your business, property, or
+              equipment requirements. MP Micro IT Solutions
+              is ready to help you explore practical
+              technology solutions for your needs.
+            </p>
           </div>
+
           <div className="ab-actions">
-            <a className="ab-btn ab-btn--primary" href={CONTACT_HREF}>
+            <a
+              className="ab-btn ab-btn--primary"
+              href={CONTACT_HREF}
+            >
               Get in touch
             </a>
-            <a className="ab-btn" href={MAP_HREF} target="_blank" rel="noopener noreferrer">
+
+            <a
+              className="ab-btn"
+              href={MAP_HREF}
+              target="_blank"
+              rel="noopener noreferrer"
+            >
               Find us
             </a>
           </div>
         </Reveal>
+
       </div>
     </section>
   );

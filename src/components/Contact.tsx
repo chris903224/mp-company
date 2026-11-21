@@ -37,6 +37,7 @@ export default function Contact({ preferredService, business }: ContactProps) {
                   href={`mailto:${business?.email || 'mpmicroitsolutions@gmail.com'}`}
                   style={{ wordBreak: 'break-all' }} // Para hindi umapaw sa mobile
                 >
+                  
                   {business?.email || 'mpmicroitsolutions@gmail.com'}
                 </a>
               </span>

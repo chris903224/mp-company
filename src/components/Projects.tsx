@@ -1,14 +1,66 @@
 import { useEffect, useMemo, useRef, useState } from 'react';
 import type { SyntheticEvent } from 'react';
 import { useReveal } from '../hooks/useReveal';
-import type { ProjectItem } from '../types'; // Gagamit tayo ng generic na type
+import type { ProjectItem } from '../types';
+
+/* ───────── HARDCODED LOCAL IMAGES ───────── */
+// Gumamit ng "/" sa simula para mag-point sa public folder root
+const HARDCODED_PROJECTS = [
+  {
+    id: '1',
+    img: '/work-1.png', 
+    alt: 'Network Cabling Project',
+    captionTitle: 'Structured Cabling',
+    captionBody: 'Professional network cabling setup.',
+    category: 'network'
+  },
+  {
+    id: '2',
+    img: '/work-2.png', 
+    alt: 'Server Rack Setup',
+    captionTitle: 'Server Rack',
+    captionBody: 'Organized server rack installation.',
+    category: 'network'
+  },
+  {
+    id: '3',
+    img: '/work-3.png', 
+    alt: 'CCTV Installation',
+    captionTitle: 'CCTV Surveillance',
+    captionBody: 'Security camera system setup.',
+    category: 'security'
+  },
+  {
+    id: '4',
+    img: '/work-4.png', 
+    alt: 'Security System',
+    captionTitle: 'Access Control',
+    captionBody: 'Modern security access points.',
+    category: 'security'
+  },
+  {
+    id: '5',
+    img: '/work-5.png', 
+    alt: 'IT Infrastructure',
+    captionTitle: 'Tech Infrastructure',
+    captionBody: 'Core IT infrastructure components.',
+    category: 'network'
+  }
+];
 
 /* ───────── Data ───────── */
 
 const CATEGORIES = [
-  { id: 'network', label: 'Network Infrastructure', match: /cabl|network|\blan\b|fib(er|re)|rack|patch|switch|wi-?fi|router|terminat|conduit/i },
-  { id: 'hardware', label: 'IT Hardware', match: /hardware|computer|laptop|desktop|\bpc\b|printer|monitor|workstation/i },
-  { id: 'security', label: 'CCTV & Security', match: /cctv|camera|surveillance|security|access control|alarm|\bdvr\b|\bnvr\b/i },
+  { 
+    id: 'network', 
+    label: 'Network Infrastructure', 
+    match: /cabl|network|\blan\b|fib(er|re)|rack|patch|switch|wi-?fi|router|terminat|conduit/i 
+  },
+  { 
+    id: 'security', 
+    label: 'CCTV & Security', 
+    match: /cctv|camera|surveillance|security|access control|alarm|\bdvr\b|\bnvr\b/i 
+  },
 ];
 
 const ICONS = {
@@ -27,20 +79,15 @@ const hideBroken = (e: SyntheticEvent<HTMLImageElement>) => {
   e.currentTarget.style.visibility = 'hidden';
 };
 
-/* ───────── Card ───────── */
+/* ───────── Card (Picture Only) ───────── */
 
 function Card({ item, onOpen }: { item: any; onOpen: (index: number) => void }) {
   const ref = useReveal<HTMLElement>();
   return (
     <figure ref={ref} className="fd pg-item">
-      <button type="button" className="pg-card" onClick={() => onOpen(item.index)}>
+      <button type="button" className="pg-card picture-only" onClick={() => onOpen(item.index)}>
         <span className="pg-media">
           <img src={item.img} alt={item.alt} loading="lazy" decoding="async" onError={hideBroken} />
-        </span>
-        <span className="pg-cap">
-          <span className="pg-cat">{item.category.label}</span>
-          <span className="pg-name">{item.title}</span>
-          <span className="pg-desc">{item.body}</span>
         </span>
       </button>
     </figure>
@@ -50,37 +97,33 @@ function Card({ item, onOpen }: { item: any; onOpen: (index: number) => void }) 
 /* ───────── Page ───────── */
 
 interface ProjectsProps {
-  projects: ProjectItem[];
+  projects: ProjectItem[]; 
   isLoading: boolean;
 }
 
-export default function Projects({ projects, isLoading }: ProjectsProps) {
+// FIXED: Ginamitan ng underscore (_) ang projects para di magka-warning na unused
+// O pwede rin na tanggalin sa destructuring kung di talaga gagamitin: ({ isLoading }: ProjectsProps)
+export default function Projects({ projects: _projects, isLoading }: ProjectsProps) {
   const [filter, setFilter] = useState('all');
   const [open, setOpen] = useState<number | null>(null);
   const dialogRef = useRef<HTMLDialogElement | null>(null);
 
-  // 1. I-transform yung dynamic data (galing Supabase) papunta sa format ng component
+  // --- LOGIC: Use Hardcoded Local Data ---
   const ITEMS = useMemo(() => {
-    return projects.map((p, index) => {
-      const declared = ((p as { category?: string }).category ?? '').trim().toLowerCase();
-      const text = `${p.alt} ${p.captionTitle} ${p.captionBody}`;
-      const category =
-        CATEGORIES.find((c) => c.id === declared || c.label.toLowerCase() === declared) ??
-        [...CATEGORIES].reverse().find((c) => c.match.test(text)) ??
-        CATEGORIES[0];
-        
+    return HARDCODED_PROJECTS.map((p, index) => {
+      const categoryObj = CATEGORIES.find(c => c.id === p.category) || CATEGORIES[0];
+      
       return { 
         index, 
         img: p.img, 
         alt: p.alt, 
         title: p.captionTitle, 
         body: p.captionBody, 
-        category 
+        category: categoryObj
       };
     });
-  }, [projects]);
+  }, []); 
 
-  // 2. I-generate yung TABS base sa kung anong category meron yung data
   const TABS = useMemo(() => {
     return [
       { id: 'all', label: 'All' }, 
@@ -92,6 +135,7 @@ export default function Projects({ projects, isLoading }: ProjectsProps) {
     () => (filter === 'all' ? ITEMS : ITEMS.filter((i) => i.category.id === filter)),
     [filter, ITEMS],
   );
+  
   const current = open === null ? null : ITEMS[open];
   const pos = current ? visible.findIndex((i) => i.index === current.index) : -1;
 
@@ -109,8 +153,7 @@ export default function Projects({ projects, isLoading }: ProjectsProps) {
     if (visible.length > 1) setOpen(visible[(pos + dir + visible.length) % visible.length].index);
   };
 
-  // Loading state habang kinukuha sa Supabase
-  if (isLoading) {
+  if (isLoading && ITEMS.length === 0) {
     return (
       <section className="pg" id="portfolio">
         <div className="wrap" style={{ textAlign: 'center', padding: '4rem 0', color: 'var(--mut)' }}>
@@ -120,7 +163,6 @@ export default function Projects({ projects, isLoading }: ProjectsProps) {
     );
   }
 
-  // Kapag walang projects na nakuha
   if (ITEMS.length === 0) return null;
 
   return (
@@ -132,7 +174,7 @@ export default function Projects({ projects, isLoading }: ProjectsProps) {
             <span>Delivering Solutions.</span>
           </h1>
           <p className="ph-lead">
-            IT infrastructure, networking, hardware and security installations, delivered end to end.
+            IT infrastructure, networking, and security installations, delivered end to end.
           </p>
         </div>
       </section>
@@ -158,6 +200,7 @@ export default function Projects({ projects, isLoading }: ProjectsProps) {
             )}
           </div>
 
+          {/* Grid: Picture Only */}
           <div className="pg-grid" key={filter}>
             {visible.map((item) => (
               <Card key={item.img + item.index} item={item} onOpen={setOpen} />
@@ -165,10 +208,11 @@ export default function Projects({ projects, isLoading }: ProjectsProps) {
           </div>
         </div>
 
+        {/* Dialog: Picture Only with Controls */}
         <dialog
           ref={dialogRef}
-          className="pg-dialog"
-          aria-label={current?.title}
+          className="pg-dialog picture-only-mode"
+          aria-label="Project Image Viewer"
           onClose={() => setOpen(null)}
           onClick={(e) => e.target === dialogRef.current && dialogRef.current?.close()}
           onKeyDown={(e) => {
@@ -177,25 +221,43 @@ export default function Projects({ projects, isLoading }: ProjectsProps) {
           }}
         >
           {current && (
-            <div className="pg-panel">
-              <img key={current.index} className="pg-dimg" src={current.img} alt={current.alt} onError={hideBroken} />
-              <div className="pg-dinfo">
-                <p className="pg-cat">{current.category.label}</p>
-                <h2 className="pg-dtitle">{current.title}</h2>
-                <p className="pg-ddesc">{current.body}</p>
-                {visible.length > 1 && (
-                  <div className="pg-dnav">
-                    <button type="button" className="pg-step" onClick={() => step(-1)} aria-label="Previous project">
-                      <Icon d={ICONS.prev} />
-                    </button>
-                    <span className="pg-dcount" aria-live="polite">{pos + 1} / {visible.length}</span>
-                    <button type="button" className="pg-step" onClick={() => step(1)} aria-label="Next project">
-                      <Icon d={ICONS.next} />
-                    </button>
-                  </div>
-                )}
-              </div>
-              <button type="button" className="pg-close" onClick={() => dialogRef.current?.close()} aria-label="Close">
+            <div className="pg-panel-fullscreen">
+              <img 
+                key={current.index} 
+                className="pg-dimg-full" 
+                src={current.img} 
+                alt={current.alt} 
+                onError={hideBroken} 
+              />
+              
+              {visible.length > 1 && (
+                <>
+                  <button 
+                    type="button" 
+                    className="pg-nav-btn prev" 
+                    onClick={(e) => { e.stopPropagation(); step(-1); }} 
+                    aria-label="Previous image"
+                  >
+                    <Icon d={ICONS.prev} />
+                  </button>
+                  
+                  <button 
+                    type="button" 
+                    className="pg-nav-btn next" 
+                    onClick={(e) => { e.stopPropagation(); step(1); }} 
+                    aria-label="Next image"
+                  >
+                    <Icon d={ICONS.next} />
+                  </button>
+                </>
+              )}
+
+              <button 
+                type="button" 
+                className="pg-close-btn" 
+                onClick={() => dialogRef.current?.close()} 
+                aria-label="Close viewer"
+              >
                 <Icon d={ICONS.close} />
               </button>
             </div>

@@ -14,6 +14,9 @@ type Errors = Partial<Record<FieldId, string>>;
 type Status = { kind: 'idle' | 'ok' | 'no' | 'loading'; text: string };
 type FormField = HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement;
 
+// ✅ WEB3FORMS ACCESS KEY
+const WEB3FORMS_KEY = 'c72573f7-412c-48e0-901f-4843e61c0ffb';
+
 const RULES: Record<FieldId, (v: string) => string> = {
   name: (v) => (v.trim().length >= 2 ? '' : 'Enter your full name.'),
   email: (v) =>
@@ -30,6 +33,38 @@ const RULES: Record<FieldId, (v: string) => string> = {
 };
 
 const FIELD_IDS: FieldId[] = ['name', 'email', 'phone', 'svcsel', 'msg'];
+
+// ✅ HELPER: Send email notification via Web3Forms
+async function sendEmailNotification(data: {
+  name: string;
+  email: string;
+  phone: string;
+  service: string;
+  message: string;
+}) {
+  try {
+    await fetch('https://api.web3forms.com/submit', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        Accept: 'application/json',
+      },
+      body: JSON.stringify({
+        access_key: WEB3FORMS_KEY,
+        subject: `New Client Inquiry - ${data.service}`,
+        from_name: 'MP Micro IT Solutions Website',
+        name: data.name,
+        email: data.email,
+        phone: data.phone || 'Not provided',
+        service: data.service,
+        message: data.message,
+      }),
+    });
+  } catch (err) {
+    // Silently fail - hindi dapat ma-block ang form submission kung failed ang email
+    console.warn('Email notification failed:', err);
+  }
+}
 
 export function useContactForm(preferredService: string | null) {
   const [errors, setErrors] = useState<Errors>({});
@@ -121,7 +156,7 @@ export function useContactForm(preferredService: string | null) {
         
         const serviceIndex = SERVICE_OPTIONS.indexOf(svcsel);
 
-        // ✅ FIXED: Changed 'serviceIndex' to 'serviceindex' (all lowercase) to match DB
+        // ✅ STEP 1: Save to Supabase (existing functionality - UNCHANGED)
         const { error } = await supabase.from('inquiries').insert([
           {
             name,
@@ -136,6 +171,16 @@ export function useContactForm(preferredService: string | null) {
         ]);
 
         if (error) throw error;
+
+        // ✅ STEP 2: Send email notification to Gmail (NEW - runs after Supabase save)
+        // Hindi natin hinihintay ang result ng email para di ma-delay ang success message
+        sendEmailNotification({
+          name,
+          email,
+          phone,
+          service: svcsel,
+          message: msg,
+        });
 
         setStatus({
           kind: 'ok',

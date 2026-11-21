@@ -286,3 +286,182 @@
   }
   .pg-step, .pg-close { width: 48px; height: 48px; } /* Mas malaking tap area */
 }
+/* =========================================
+   PROJECTS: PICTURE ONLY MODE (GRID + DIALOG)
+   ========================================= */
+
+/* --- GRID VIEW: Hide Text --- */
+.pg-grid .pg-card .pg-cap {
+  display: none !important;
+}
+
+.pg-grid .pg-card {
+  padding: 0 !important;
+  background: transparent !important;
+  border: none !important;
+}
+
+.pg-grid .pg-media {
+  width: 100%;
+  height: 100%;
+  display: block;
+  overflow: hidden;
+  border-radius: 8px; /* Optional: rounded corners */
+}
+
+.pg-grid .pg-media img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: transform 0.3s ease;
+  display: block;
+}
+
+.pg-grid .pg-card:hover .pg-media img {
+  transform: scale(1.05);
+}
+
+/* --- DIALOG VIEW: Fullscreen Image Only --- */
+
+/* Reset default dialog styles for picture-only mode */
+.pg-dialog.picture-only-mode {
+  background: rgba(0, 0, 0, 0.95) !important;
+  border: none !important;
+  padding: 0 !important;
+  max-width: 100vw !important;
+  max-height: 100vh !important;
+  width: 100vw !important;
+  height: 100vh !important;
+  margin: 0 !important;
+}
+
+.pg-dialog.picture-only-mode::backdrop {
+  background: rgba(0, 0, 0, 0.95);
+}
+
+/* Container for the fullscreen image */
+.pg-panel-fullscreen {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+}
+
+/* The Image itself */
+.pg-dimg-full {
+  max-width: 90vw;
+  max-height: 90vh;
+  width: auto;
+  height: auto;
+  object-fit: contain;
+  box-shadow: 0 0 50px rgba(0,0,0,0.5);
+  user-select: none;
+}
+
+/* --- Floating Controls --- */
+
+/* Common Button Style */
+.pg-nav-btn,
+.pg-close-btn {
+  position: absolute;
+  background: rgba(255, 255, 255, 0.1);
+  backdrop-filter: blur(4px);
+  color: white;
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.2s ease;
+  z-index: 100;
+}
+
+.pg-nav-btn:hover,
+.pg-close-btn:hover {
+  background: rgba(255, 255, 255, 0.3);
+  transform: scale(1.1);
+}
+
+.pg-nav-btn svg,
+.pg-close-btn svg {
+  width: 24px;
+  height: 24px;
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 2;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+
+/* Close Button Position (Top Right) */
+.pg-close-btn {
+  top: 20px;
+  right: 20px;
+  width: 48px;
+  height: 48px;
+  border-radius: 50%;
+}
+
+/* Prev Button Position (Left Center) */
+.pg-nav-btn.prev {
+  left: 20px;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 48px;
+  height: 48px;
+  border-radius: 50%;
+}
+
+.pg-nav-btn.prev:hover {
+  transform: translateY(-50%) scale(1.1);
+}
+
+/* Next Button Position (Right Center) */
+.pg-nav-btn.next {
+  right: 20px;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 48px;
+  height: 48px;
+  border-radius: 50%;
+}
+
+.pg-nav-btn.next:hover {
+  transform: translateY(-50%) scale(1.1);
+}
+
+/* Mobile Adjustments */
+@media (max-width: 768px) {
+  .pg-dimg-full {
+    max-width: 95vw;
+    max-height: 80vh;
+  }
+  
+  .pg-nav-btn,
+  .pg-close-btn {
+    width: 40px;
+    height: 40px;
+  }
+  
+  .pg-nav-btn svg,
+  .pg-close-btn svg {
+    width: 20px;
+    height: 20px;
+  }
+  
+  .pg-close-btn {
+    top: 10px;
+    right: 10px;
+  }
+  
+  .pg-nav-btn.prev {
+    left: 10px;
+  }
+  
+  .pg-nav-btn.next {
+    right: 10px;
+  }
+}

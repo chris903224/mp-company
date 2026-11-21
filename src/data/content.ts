@@ -1,4 +1,3 @@
-
 import type { HeroStage, ServiceItem, StepItem } from '../types';
 
 /* ---------- Navigation ---------- */
@@ -123,6 +122,7 @@ export const VALUES = [
 ];
 
 /* ---------- Services ---------- */
+// UPDATED: Removed the "IT Product Reselling & Hardware Supply" item
 export const SERVICES: ServiceItem[] = [
   {
     id: 'network',
@@ -131,15 +131,6 @@ export const SERVICES: ServiceItem[] = [
       'Structured cabling installation, cable termination, and network layout planning for offices, commercial establishments, and other properties.',
       'Local Area Network (LAN) installation, router and switch configuration, and network connectivity troubleshooting.',
       'Cable organization and infrastructure improvement to support reliable connections and easier network maintenance.',
-    ],
-  },
-  {
-    id: 'hardware',
-    title: 'IT Product Reselling & Hardware Supply',
-    bullets: [
-      'Sourcing and supply of desktop computers, laptops, networking equipment, peripherals, and essential office IT hardware.',
-      'Provision of network components, including routers, switches, structured cabling materials, and related accessories.',
-      'Hardware recommendations based on your intended use, technical requirements, and available budget.',
     ],
   },
   {
@@ -154,10 +145,10 @@ export const SERVICES: ServiceItem[] = [
 ];
 
 /* ---------- Service Images ---------- */
+// UPDATED: Removed the middle image associated with the deleted hardware service
 export const SERVICE_IMAGES = [
-  'image6.png',
-  'image7.png',
-  'image8.png',
+  'image6.png', // Network Cabling
+  'image8.png', // CCTV
 ];
 
 /* ---------- Client Service Process ---------- */
@@ -185,9 +176,9 @@ export const STEPS: StepItem[] = [
 ];
 
 /* ---------- Contact Service Options ---------- */
+// UPDATED: Removed the hardware option
 export const SERVICE_OPTIONS = [
   'Network Cabling & Infrastructure',
-  'IT Product Reselling & Hardware Supply',
   'CCTV & Security System Installation',
   'Multiple IT Services',
   'Other / Not sure yet',

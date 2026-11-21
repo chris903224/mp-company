@@ -3,8 +3,12 @@ import { createClient } from '@supabase/supabase-js';
 const supabaseUrl = import.meta.env.VITE_SUPABASE_URL;
 const supabaseAnonKey = import.meta.env.VITE_SUPABASE_ANON_KEY;
 
-// ITO ANG IDAGDAG MO PARA MAKITA NATIN:
-console.log('URL:', supabaseUrl);
-console.log('KEY:', supabaseAnonKey);
+// ✅ Safety check - wag mag-initialize kung walang credentials
+if (!supabaseUrl || !supabaseAnonKey) {
+  console.warn('⚠️ Supabase credentials not found. Check your .env file.');
+}
 
-export const supabase = createClient(supabaseUrl, supabaseAnonKey);
+export const supabase = createClient(
+  supabaseUrl ?? '',
+  supabaseAnonKey ?? ''
+);
